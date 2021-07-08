@@ -1,0 +1,19 @@
+{
+  "name": "rpi-weather-full",
+  "version": "1.0.0",
+  "description": "working on turning a raspberry pi into an always on, internet connected weather station",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jbjonesjr/rpi-weather.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jbjonesjr/rpi-weather/issues"
+  },
+  "homepage": "https://github.com/jbjonesjr/rpi-weather#readme"
+}

@@ -5,13 +5,13 @@
   "main": "index.js",
   "scripts": {
     "install": "npm run install:client && npm run install:server",
-    "install:client": "(cd ./app && npm install)",
-    "install:server": "(cd ./server && npm install)",
+    "install:client": "(cd ./src/app && npm install)",
+    "install:server": "(cd ./src/server && npm install)",
     "start": "npm run start:prod",
     "start:prod": "(cd ./server && node index.js)",
     "start:dev": "npm run start:client & npm run start:server",
     "start:client": "",
-    "start:server": "(cd ./server && npm run start:watch)",
+    "start:server": "(cd ./src/server && npm run start:watch)",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

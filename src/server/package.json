@@ -1,0 +1,23 @@
+{
+  "name": "weather-rpi-server",
+  "version": "1.0.0",
+  "description": "Web Server for Weather RPI project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jbjonesjr/rpi-weather.git"
+  },
+  "author": "@jbjonesjr",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jbjonesjr/rpi-weather/issues"
+  },
+  "homepage": "https://github.com/jbjonesjr/rpi-weather#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}

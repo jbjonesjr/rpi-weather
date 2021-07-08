@@ -8,7 +8,7 @@
     "install:client": "(cd ./src/app)",
     "install:server": "(cd ./src/server && npm install)",
     "start": "npm run start:prod",
-    "start:prod": "(cd ./server && node index.js)",
+    "start:prod": "(cd ./src/server && node index.js)",
     "start:dev": "npm run start:client & npm run start:server",
     "start:client": "",
     "start:server": "(cd ./src/server && npm run start:watch)",

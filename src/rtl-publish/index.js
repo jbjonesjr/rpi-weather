@@ -130,7 +130,7 @@ const [user, account] = await sql.begin(async sql => {
   return [user, account]
 })
 
-*/
+
 const [new_user] = await client`
   insert into reports (
     
@@ -141,3 +141,4 @@ const [new_user] = await client`
   returning *
 `
 client.qu
+*/

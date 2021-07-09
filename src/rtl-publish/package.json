@@ -1,0 +1,22 @@
+{
+  "name": "rtl433-lacrosse-publish-to-postgress",
+  "version": "1.0.0",
+  "description": "Publish La Crosse sensor messages from json (via RTL433) to PostgreSQL",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jbjonesjr/rpi-weather.git"
+  },
+  "author": "@jbjonesjr",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jbjonesjr/rpi-weather/issues"
+  },
+  "homepage": "https://github.com/jbjonesjr/rpi-weather#readme",
+  "dependencies": {
+    "pg": "^8.6.0"
+  }
+}

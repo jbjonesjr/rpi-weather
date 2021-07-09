@@ -18,9 +18,15 @@ var options = {
   var child = spawn("rtl_433", ["-f", "915M", "-F", "csv"].concat(allModels),options);
  }
  
- echoReadable(child.stdout); // (B)
+ echoReadable(child.stdout);
 
- console.log('### DONE initial load');
+/*
+
+inspired by https://github.com/Ax-LED/pimatic-rtl433/blob/master/rtl433.coffee
+for reference: https://github.com/merbanan/rtl_433
+used code/strategy from: https://stackoverflow.com/a/65475259/464990
+
+*/
 
   async function echoReadable(readable) {
     for await (const line of chunksToLinesAsync(readable)) { // (C)
@@ -32,7 +38,7 @@ var options = {
       // But I should probably look for new devices as well....
         result = {}
         result = {
-            "dtg": datas[0],
+            "dtg": new Date(datas[0]), //YYYY-MM-DD HH24:MI:SS
             "model": datas[3],
             "sensorId": datas[4],
             "seq": datas[5],
@@ -46,56 +52,31 @@ var options = {
         }
         console.log("Got measure (model:" + result.model + ", sensorId: " + result.sensorId + ", channel: " + result.channel + ", lowbattery:" + result.lowbattery + ", TempC:" + result.temperatureC + ", Humidity:" + result.humidity + ", TempF:" + result.temperatureF + ")");
         console.log('details', result);
+        
+        /*
+        The sensor generates a packet every 'n' seconds but only transmits if one or
+        more of the following conditions are satisfied:
+        - temp changes +/- 0.8 degrees C
+        - humidity changes +/- 1%
+        - wind speed changes +/- 0.5 kM/h
+        Thus, if there is a gap in sequencing, it is due to bad packet[s] (too short,
+        failed CRC) or packet[s] that didn't satisfy at least one of these three
+        conditions. 'n' above varies with temperature.  At 0C and above, 'n' is 31.
+        Between -17C and 0C, 'n' is 60.  Below -17C, 'n' is 360.
+        */
+
+        // ensure we haven't saved a result in the last hour
+
+        if(!last || (last.dtg + (60*60*1000) > result.dtg))
+        {
+          console.log("should be saving to persistence here")
+          let last = result;
+        }
 
     }
   }
 
-/*
 
-inspired by https://github.com/Ax-LED/pimatic-rtl433/blob/master/rtl433.coffee
-for reference: https://github.com/merbanan/rtl_433
-  spawn = require('child_process').spawn
-      proc = spawn("#{__dirname}/bin/rtl_433",['-f', @config.freq, '-R', '03', '-R', '19', '-R', '52', '-R', '141', '-F', 'csv', '-l', @config.detectionLevel])
-
-       proc.stdout.setEncoding('utf8')
-      proc.stderr.setEncoding('utf8')
-      rl = readline.createInterface({ input: proc.stdout })
-
-      rl.on('line', (line) => 
-        @_dataReceived(line)
-      )
-
-      proc.stderr.on('data',(data) =>
-        lines = data.split(/(\r?\n)/g)
-        env.logger.warn line for line in lines when line.trim() isnt ''
-      )
-
-      proc.on('close',(code) =>
-        if code!=0
-          env.logger.error "rtl_433 returned", code
-        rl.close()
-      )
-
-    _dataReceived: (data) ->
-      env.logger.debug data
-      datas = {};
-      datas = data.split(",")
-      if datas.length == 15 #Data Length variiert, abhängig von den RTL_433 Parametern
-        result = {}
-        result = {
-            "model": datas[3],
-            "sensorId": datas[5],
-            "channel": datas[7],
-            "lowbattery": datas[8],
-            "temperatureC": parseFloat(datas[9]),
-            "humidity": parseInt(datas[10]),
-            "temperatureF": parseFloat(datas[12])
-        }
-        env.logger.debug "Got measure (model:" + result.model + ", sensorId: " + result.sensorId + ", channel: " + result.channel + ", lowbattery:" + result.lowbattery + ", TempC:" + result.temperatureC + ", Humidity:" + result.humidity + ", TempF:" + result.temperatureF + ")"
-        @emit('temp', result)
-
-
-*/
 
 // use process.env.DATABASE_URL instead
 const client = new Client({

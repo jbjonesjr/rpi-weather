@@ -4,22 +4,30 @@ const { Client } = require('pg');
 let spawn = require('child_process').spawn;
 const {chunksToLinesAsync, chomp} = require('@rauschma/stringio');
 
+const mode = 'weather';
+const weatherModels = ["-R","166","-R","175"];
+const allModels = [];
+
 var options = {
   stdio: ["ignore", "pipe", process.stderr]
 };
  console.log("Here is the complete output of the program: ");
+ if(mode == 'weather'){
+  var child = spawn("rtl_433", ["-f", "915M", "-F", "csv"].concat(weatherModels),options);
+ }else{
+  var child = spawn("rtl_433", ["-f", "915M", "-F", "csv"].concat(allModels),options);
+ }
  
- var child = spawn("rtl_433", ["-f", "915M", "-R","166","-R","175","-F", "csv"],options);
  echoReadable(child.stdout); // (B)
 
-console.log('### DONE');
+ console.log('### DONE initial load');
 
   async function echoReadable(readable) {
     for await (const line of chunksToLinesAsync(readable)) { // (C)
       console.log('LINE: '+chomp(line))
       datas = {};
       datas = line.split(",")
-      if(datas.length == 15 ) //Data Length varies, based on RTL-433 formats/parameters passed in
+      if(datas.length == 15 && mode == 'weather') //Data Length varies, based on RTL-433 formats/parameters passed in
       // this is only good for weather formats (-R 166 and -R 175 are the key for me)
       // But I should probably look for new devices as well....
         result = {}

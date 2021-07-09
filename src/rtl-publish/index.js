@@ -24,13 +24,17 @@ console.log('### DONE');
       // But I should probably look for new devices as well....
         result = {}
         result = {
+            "dtg": data[0],
             "model": datas[3],
-            "sensorId": datas[5],
-            "channel": datas[7],
-            "lowbattery": datas[8],
-            "temperatureC": parseFloat(datas[9]),
-            "humidity": parseInt(datas[10]),
-            "temperatureF": parseFloat(datas[12])
+            "sensorId": datas[4],
+            "seq": datas[5],
+            "lowbattery": datas[6],
+            "temperatureC": parseFloat(datas[7]),
+            "humidity": parseInt(datas[8]),
+            "wind_kph": parseFloat(datas[9]),
+            "wind_dir": parseInt(datas[10]),
+            "rain1": parseFloat(datas[12]),
+            "rain2": parseFloat(datas[13]),
         }
         console.log("Got measure (model:" + result.model + ", sensorId: " + result.sensorId + ", channel: " + result.channel + ", lowbattery:" + result.lowbattery + ", TempC:" + result.temperatureC + ", Humidity:" + result.humidity + ", TempF:" + result.temperatureF + ")");
         console.log('details', result);

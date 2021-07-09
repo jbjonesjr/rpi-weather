@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/jbjonesjr/rpi-weather#readme",
   "dependencies": {
+    "@rauschma/stringio": "^1.4.0",
     "pg": "^8.6.0"
   }
 }

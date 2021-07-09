@@ -1,6 +1,43 @@
 const { Client } = require('pg');
 //docs: https://www.npmjs.com/package/postgres
 
+let spawn = require('child_process').spawn;
+const {chunksToLinesAsync, chomp} = require('@rauschma/stringio');
+
+var options = {
+  stdio: ["ignore", "pipe", process.stderr]
+};
+ console.log("Here is the complete output of the program: ");
+ 
+ var child = spawn("rtl_433", ["-f", "915M", "-R","166","-R","175","-F", "csv"],options);
+ echoReadable(child.stdout); // (B)
+
+console.log('### DONE');
+
+  async function echoReadable(readable) {
+    for await (const line of chunksToLinesAsync(readable)) { // (C)
+      console.log('LINE: '+chomp(line))
+      datas = {};
+      datas = line.split(",")
+      if(datas.length == 15 ) //Data Length varies, based on RTL-433 formats/parameters passed in
+      // this is only good for weather formats (-R 166 and -R 175 are the key for me)
+      // But I should probably look for new devices as well....
+        result = {}
+        result = {
+            "model": datas[3],
+            "sensorId": datas[5],
+            "channel": datas[7],
+            "lowbattery": datas[8],
+            "temperatureC": parseFloat(datas[9]),
+            "humidity": parseInt(datas[10]),
+            "temperatureF": parseFloat(datas[12])
+        }
+        console.log("Got measure (model:" + result.model + ", sensorId: " + result.sensorId + ", channel: " + result.channel + ", lowbattery:" + result.lowbattery + ", TempC:" + result.temperatureC + ", Humidity:" + result.humidity + ", TempF:" + result.temperatureF + ")");
+        console.log('details', result);
+
+    }
+  }
+
 /*
 
 inspired by https://github.com/Ax-LED/pimatic-rtl433/blob/master/rtl433.coffee

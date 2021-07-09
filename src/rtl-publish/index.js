@@ -32,7 +32,7 @@ var options = {
       // But I should probably look for new devices as well....
         result = {}
         result = {
-            "dtg": data[0],
+            "dtg": datas[0],
             "model": datas[3],
             "sensorId": datas[4],
             "seq": datas[5],

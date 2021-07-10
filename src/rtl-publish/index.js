@@ -3,6 +3,7 @@ const { Client } = require('pg');
 
 let spawn = require('child_process').spawn;
 const {chunksToLinesAsync, chomp} = require('@rauschma/stringio');
+let last = null;
 
 const mode = 'weather';
 const weatherModels = ["-R","166","-R","175"];
@@ -70,7 +71,7 @@ used code/strategy from: https://stackoverflow.com/a/65475259/464990
         if(!last || (last.dtg + (60*60*1000) > result.dtg))
         {
           console.log("should be saving to persistence here")
-          let last = result;
+          last = result;
         }
 
     }

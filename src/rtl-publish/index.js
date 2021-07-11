@@ -73,7 +73,7 @@ used code/strategy from: https://stackoverflow.com/a/65475259/464990
           console.log("should be saving to persistence here")
           last = result;
         }else{
-          console.log(`skipping persistence. last: ${last}`)
+          console.log(`skipping persistence. last: ${JSON.stringify(last, null, 2)}`)
         }
 
     }

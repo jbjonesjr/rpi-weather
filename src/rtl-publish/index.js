@@ -34,7 +34,7 @@ async function echoReadable(readable) {
     console.log('RAW INGEST: ' + chomp(line))
     datas = {};
     datas = line.split(",")
-    if (datas.length == 15 && mode == 'weather') { //Data Length varies, based on RTL-433 formats/parameters passed in
+    if (datas.length == 14 && mode == 'weather') { //Data Length varies, based on RTL-433 formats/parameters passed in
       // this is only good for weather formats (-R 166 and -R 175 are the key for me)
       // But I should probably look for new devices as well....
       result = {

@@ -50,7 +50,9 @@ async function echoReadable(readable) {
         "rain1": parseFloat(datas[12]),
         "rain2": parseFloat(datas[13])
       }
-      console.log('data', result);
+      console.debug('data:', result);
+    }else{
+      console.debug("data: Didn't meet the weather format?")
     }
 
     /*

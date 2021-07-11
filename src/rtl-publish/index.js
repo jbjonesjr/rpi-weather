@@ -2,24 +2,24 @@ const { Client } = require('pg');
 //docs: https://www.npmjs.com/package/postgres
 
 let spawn = require('child_process').spawn;
-const {chunksToLinesAsync, chomp} = require('@rauschma/stringio');
+const { chunksToLinesAsync, chomp } = require('@rauschma/stringio');
 let last = null;
 
 const mode = 'weather';
-const weatherModels = ["-R","166","-R","175"];
+const weatherModels = ["-R", "166", "-R", "175"];
 const allModels = [];
 
 var options = {
   stdio: ["ignore", "pipe", process.stderr]
 };
- console.log("Here is the complete output of the program: ");
- if(mode == 'weather'){
-  var child = spawn("rtl_433", ["-f", "915M", "-F", "csv"].concat(weatherModels),options);
- }else{
-  var child = spawn("rtl_433", ["-f", "915M", "-F", "csv"].concat(allModels),options);
- }
- 
- echoReadable(child.stdout);
+console.log("Here is the complete output of the program: ");
+if (mode == 'weather') {
+  var child = spawn("rtl_433", ["-f", "915M", "-F", "csv"].concat(weatherModels), options);
+} else {
+  var child = spawn("rtl_433", ["-f", "915M", "-F", "csv"].concat(allModels), options);
+}
+
+echoReadable(child.stdout);
 
 /*
 
@@ -29,53 +29,53 @@ used code/strategy from: https://stackoverflow.com/a/65475259/464990
 
 */
 
-  async function echoReadable(readable) {
-    for await (const line of chunksToLinesAsync(readable)) { // (C)
-      console.log('RAW INGEST: '+chomp(line))
-      datas = {};
-      datas = line.split(",")
-      if(datas.length == 15 && mode == 'weather') //Data Length varies, based on RTL-433 formats/parameters passed in
+async function echoReadable(readable) {
+  for await (const line of chunksToLinesAsync(readable)) { // (C)
+    console.log('RAW INGEST: ' + chomp(line))
+    datas = {};
+    datas = line.split(",")
+    if (datas.length == 15 && mode == 'weather') { //Data Length varies, based on RTL-433 formats/parameters passed in
       // this is only good for weather formats (-R 166 and -R 175 are the key for me)
       // But I should probably look for new devices as well....
-        result = {
-            "dtg": new Date(datas[0]), //YYYY-MM-DD HH24:MI:SS
-            "model": datas[3],
-            "sensorId": datas[4],
-            "seq": datas[5],
-            "lowbattery": datas[6],
-            "temperatureC": parseFloat(datas[7]),
-            "humidity": parseInt(datas[8]),
-            "wind_kph": parseFloat(datas[9]),
-            "wind_dir": parseInt(datas[10]),
-            "rain1": parseFloat(datas[12]),
-            "rain2": parseFloat(datas[13]),
-        }
-        console.log('data', result);
-        
-        /*
-        The sensor generates a packet every 'n' seconds but only transmits if one or
-        more of the following conditions are satisfied:
-        - temp changes +/- 0.8 degrees C
-        - humidity changes +/- 1%
-        - wind speed changes +/- 0.5 kM/h
-        Thus, if there is a gap in sequencing, it is due to bad packet[s] (too short,
-        failed CRC) or packet[s] that didn't satisfy at least one of these three
-        conditions. 'n' above varies with temperature.  At 0C and above, 'n' is 31.
-        Between -17C and 0C, 'n' is 60.  Below -17C, 'n' is 360.
-        */
-
-        // ensure we haven't saved a result in the last hour
-
-        if(!last || (last.dtg + (60*60*1000) > result.dtg))
-        {
-          console.log("SAVING: PERSISTENCE goes here")
-          last = result;
-        }else{
-          console.log(`SKIPPING: persistence last dtg: ${last.dtg}`)
-        }
-
+      result = {
+        "dtg": new Date(datas[0]), //YYYY-MM-DD HH24:MI:SS
+        "model": datas[3],
+        "sensorId": datas[4],
+        "seq": datas[5],
+        "lowbattery": datas[6],
+        "temperatureC": parseFloat(datas[7]),
+        "humidity": parseInt(datas[8]),
+        "wind_kph": parseFloat(datas[9]),
+        "wind_dir": parseInt(datas[10]),
+        "rain1": parseFloat(datas[12]),
+        "rain2": parseFloat(datas[13])
+      }
+      console.log('data', result);
     }
+
+    /*
+    The sensor generates a packet every 'n' seconds but only transmits if one or
+    more of the following conditions are satisfied:
+    - temp changes +/- 0.8 degrees C
+    - humidity changes +/- 1%
+    - wind speed changes +/- 0.5 kM/h
+    Thus, if there is a gap in sequencing, it is due to bad packet[s] (too short,
+    failed CRC) or packet[s] that didn't satisfy at least one of these three
+    conditions. 'n' above varies with temperature.  At 0C and above, 'n' is 31.
+    Between -17C and 0C, 'n' is 60.  Below -17C, 'n' is 360.
+    */
+
+    // ensure we haven't saved a result in the last hour
+
+    if (!last || (last.dtg + (60 * 60 * 1000) > result.dtg)) {
+      console.log("SAVING: PERSISTENCE goes here")
+      last = result;
+    } else {
+      console.log(`SKIPPING: persistence last dtg: ${last.dtg}`)
+    }
+
   }
+}
 
 
 
@@ -97,7 +97,7 @@ const users = [{
   name: 'Walter',
   age: 78
 }]
- 
+
 sql`
   insert into users ${
     sql(users, 'name', 'age')
@@ -112,7 +112,7 @@ const [user, account] = await sql.begin(async sql => {
       'Alice'
     )
   `
- 
+
   const [account] = await sql`
     insert into accounts (
       user_id
@@ -120,18 +120,18 @@ const [user, account] = await sql.begin(async sql => {
       ${ user.user_id }
     )
   `
- 
+
   return [user, account]
 })
 
 
 const [new_user] = await client`
   insert into reports (
-    
+
   ) values (
     'Murray', 68
   )
- 
+
   returning *
 `
 client.qu

@@ -31,13 +31,12 @@ used code/strategy from: https://stackoverflow.com/a/65475259/464990
 
   async function echoReadable(readable) {
     for await (const line of chunksToLinesAsync(readable)) { // (C)
-      console.log('LINE: '+chomp(line))
+      console.log('RAW INGEST: '+chomp(line))
       datas = {};
       datas = line.split(",")
       if(datas.length == 15 && mode == 'weather') //Data Length varies, based on RTL-433 formats/parameters passed in
       // this is only good for weather formats (-R 166 and -R 175 are the key for me)
       // But I should probably look for new devices as well....
-        result = {}
         result = {
             "dtg": new Date(datas[0]), //YYYY-MM-DD HH24:MI:SS
             "model": datas[3],
@@ -51,8 +50,7 @@ used code/strategy from: https://stackoverflow.com/a/65475259/464990
             "rain1": parseFloat(datas[12]),
             "rain2": parseFloat(datas[13]),
         }
-        console.log("Got measure (model:" + result.model + ", sensorId: " + result.sensorId + ", channel: " + result.channel + ", lowbattery:" + result.lowbattery + ", TempC:" + result.temperatureC + ", Humidity:" + result.humidity + ", TempF:" + result.temperatureF + ")");
-        console.log('details', result);
+        console.log('data', result);
         
         /*
         The sensor generates a packet every 'n' seconds but only transmits if one or
@@ -70,10 +68,10 @@ used code/strategy from: https://stackoverflow.com/a/65475259/464990
 
         if(!last || (last.dtg + (60*60*1000) > result.dtg))
         {
-          console.log("should be saving to persistence here")
+          console.log("SAVING: PERSISTENCE goes here")
           last = result;
         }else{
-          console.log(`skipping persistence. last: ${JSON.stringify(last, null, 2)}`)
+          console.log(`SKIPPING: persistence last dtg: ${last.dtg}`)
         }
 
     }

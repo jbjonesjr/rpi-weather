@@ -51,30 +51,31 @@ async function echoReadable(readable) {
         "rain2": parseFloat(datas[13])
       }
       console.debug('data:', result);
-    }else{
+      /*
+   The sensor generates a packet every 'n' seconds but only transmits if one or
+   more of the following conditions are satisfied:
+   - temp changes +/- 0.8 degrees C
+   - humidity changes +/- 1%
+   - wind speed changes +/- 0.5 kM/h
+   Thus, if there is a gap in sequencing, it is due to bad packet[s] (too short,
+   failed CRC) or packet[s] that didn't satisfy at least one of these three
+   conditions. 'n' above varies with temperature.  At 0C and above, 'n' is 31.
+   Between -17C and 0C, 'n' is 60.  Below -17C, 'n' is 360.
+   */
+
+      // ensure we haven't saved a result in the last hour
+
+      if (!last || (last.dtg + (60 * 60 * 1000) > result.dtg)) {
+        console.log("SAVING: PERSISTENCE goes here")
+        last = result;
+      } else {
+        console.log(`SKIPPING: persistence last dtg: ${last.dtg}`)
+      }
+    } else {
       console.debug("data: Didn't meet the weather format?")
     }
 
-    /*
-    The sensor generates a packet every 'n' seconds but only transmits if one or
-    more of the following conditions are satisfied:
-    - temp changes +/- 0.8 degrees C
-    - humidity changes +/- 1%
-    - wind speed changes +/- 0.5 kM/h
-    Thus, if there is a gap in sequencing, it is due to bad packet[s] (too short,
-    failed CRC) or packet[s] that didn't satisfy at least one of these three
-    conditions. 'n' above varies with temperature.  At 0C and above, 'n' is 31.
-    Between -17C and 0C, 'n' is 60.  Below -17C, 'n' is 360.
-    */
 
-    // ensure we haven't saved a result in the last hour
-
-    if (!last || (last.dtg + (60 * 60 * 1000) > result.dtg)) {
-      console.log("SAVING: PERSISTENCE goes here")
-      last = result;
-    } else {
-      console.log(`SKIPPING: persistence last dtg: ${last.dtg}`)
-    }
 
   }
 }

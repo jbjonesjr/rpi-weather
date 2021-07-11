@@ -72,7 +72,7 @@ async function echoReadable(readable) {
         console.log(`SKIPPING: persistence last dtg: ${last.dtg}`)
       }
     } else {
-      console.debug("data: Didn't meet the weather format?")
+      console.debug(`data: Didn't meet the weather format? size: ${datas.length}`)
     }
 
 

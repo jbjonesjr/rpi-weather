@@ -71,7 +71,8 @@ async function echoReadable(readable) {
       // ensure we haven't saved a result in the last hour
 
       if (!last || (last.dtg.getTime() + (60 * 60 * 1000) < result.dtg.getTime())) {
-        console.log("SAVING: PERSISTENCE goes here")
+        console.log(`SAVING: PERSISTENCE goes here`)
+        console.debug(`last dtg: ${last.dtg}`)
         last = result;
       } else {
         console.log(`SKIPPING: persistence last dtg: ${last.dtg}`)

@@ -70,7 +70,7 @@ async function echoReadable(readable) {
 
       // ensure we haven't saved a result in the last hour
 
-      if (!last || (last.dtg + (60 * 60 * 1000) > result.dtg)) {
+      if (!last || (last.dtg.getTime() + (60 * 60 * 1000) > result.dtg.getTime())) {
         console.log("SAVING: PERSISTENCE goes here")
         last = result;
       } else {

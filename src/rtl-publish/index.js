@@ -3,6 +3,7 @@ const { Client } = require('pg');
 
 let spawn = require('child_process').spawn;
 const { chunksToLinesAsync, chomp } = require('@rauschma/stringio');
+let init = true;
 let last = null;
 
 const mode = 'weather';
@@ -12,7 +13,6 @@ const allModels = [];
 var options = {
   stdio: ["ignore", "pipe", process.stderr]
 };
-console.log("Here is the complete output of the program: ");
 if (mode == 'weather') {
   var child = spawn("rtl_433", ["-f", "915M", "-F", "csv"].concat(weatherModels), options);
 } else {
@@ -30,8 +30,10 @@ used code/strategy from: https://stackoverflow.com/a/65475259/464990
 */
 
 async function echoReadable(readable) {
-  for await (const line of chunksToLinesAsync(readable)) { // (C)
+  for await (const line of chunksToLinesAsync(readable)) {    
     console.log('RAW INGEST: ' + chomp(line))
+    if(init)
+      continue;
     datas = {};
     datas = line.split(",")
     if (datas.length == 14 && mode == 'weather') { //Data Length varies, based on RTL-433 formats/parameters passed in
@@ -72,7 +74,7 @@ async function echoReadable(readable) {
         console.log(`SKIPPING: persistence last dtg: ${last.dtg}`)
       }
     } else {
-      console.debug(`data: Didn't meet the weather format? size: ${datas.length}, mode: ${mode}`)
+      console.debug(`data: No parsing criteria met. mode: ${mode}, data size: ${datas.length}`)
     }
 
 

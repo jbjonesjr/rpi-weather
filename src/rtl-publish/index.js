@@ -32,8 +32,11 @@ used code/strategy from: https://stackoverflow.com/a/65475259/464990
 async function echoReadable(readable) {
   for await (const line of chunksToLinesAsync(readable)) {    
     console.log('RAW INGEST: ' + chomp(line))
-    if(init)
+    if(init){
+      init = false;
       continue;
+    }
+      
     datas = {};
     datas = line.split(",")
     if (datas.length == 14 && mode == 'weather') { //Data Length varies, based on RTL-433 formats/parameters passed in

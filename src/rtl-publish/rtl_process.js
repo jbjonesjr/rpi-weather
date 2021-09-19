@@ -6,7 +6,7 @@ module.exports = {
   init: true,
   echoReadable: async function (readable) {
     for await (const line of chunksToLinesAsync(readable)) {    
-      console.log('RAW INGEST: ' + chomp(line))
+      console.log('RAW DATA: ' + chomp(line))
       if(this.detect_headers(line)) continue;
       this.process_input(line);
     }

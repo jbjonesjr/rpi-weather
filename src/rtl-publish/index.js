@@ -26,4 +26,3 @@ for reference: https://github.com/merbanan/rtl_433
 used code/strategy from: https://stackoverflow.com/a/65475259/464990
 
 */
-}

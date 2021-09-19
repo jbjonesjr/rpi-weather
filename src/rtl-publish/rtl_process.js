@@ -12,7 +12,7 @@ module.exports = {
     }
   },
   detect_headers: function(line, mode = 'weather') {
-    let orig_init = init;
+    let orig_init = this.init;
     if (this.init) {
       // the system prints out the headers in a line inititally that we want to ignore.
       // TODO: actually detect this line instead of "assuming". Build a function that matches the input and returns true

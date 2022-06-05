@@ -12,6 +12,7 @@ CREATE TABLE reports
     wind_dir_deg double precision NULL,
     rain_first integer NULL,
     rain_second integer NULL,
+    rain_diff double precision NULL,
     rain_rate double precision NULL,
     pressure_mb double precision NULL,
     pressure_in double precision NULL

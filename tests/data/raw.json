@@ -1,0 +1,42 @@
+[{
+    "dtg": "2021-07-17T17:04:21.000Z",
+    "model": "LaCrosse-R3",
+    "sensorId": 7346032,
+    "seq": 1,
+    "lowbattery": 0,
+    "temperatureC": null,
+    "humidity": null,
+    "wind_kph": null,
+    "wind_dir": null,
+    "rain1": 125585.75,
+    "rain2": 125585.75,
+    "rain_diff":0
+  },
+   {
+    "dtg": "2021-07-17T17:07:50.000Z",
+    "model": "LaCrosse-BreezePro",
+    "sensorId": 715591,
+    "seq": 4,
+    "lowbattery": 0,
+    "temperatureC": 31,
+    "humidity": 66,
+    "wind_kph": 0.9,
+    "wind_dir": 201,
+    "rain1": null,
+    "rain2": null,
+    "rain_diff":null
+  }, {
+    "dtg": "2021-07-17T17:07:50.000Z",
+    "model": "LaCrosse-R3",
+    "sensorId": 715591,
+    "seq": 4,
+    "lowbattery": 0,
+    "temperatureC": null,
+    "humidity": null,
+    "wind_kph": null,
+    "wind_dir": null,
+    "rain1": 727056.5,
+    "rain2": 9266.25,
+    "rain_diff":-55505
+  }
+  ]

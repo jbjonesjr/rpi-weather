@@ -33,6 +33,7 @@ module.exports = {
         "seq": parseInt(datas[5]),
         "lowbattery": parseInt(datas[6]),
         "temperatureC": parseFloat(datas[7]),
+        "temperatureF": (parseFloat(datas[7])*(9/5)) + 32,
         "humidity": parseInt(datas[8]),
         "wind_kph": parseFloat(datas[9]),
         "wind_dir": parseInt(datas[10]),
@@ -65,15 +66,15 @@ module.exports = {
   persist_data: function (data) {
     // use process.env.DATABASE_URL instead
     const client = new Client({
-      connectionString: "postgres://lovtaqracvoeyl:c11f64483882db502aa521cea87e2383af294b06e68ca161eef66aa7850f2db1@ec2-54-152-185-191.compute-1.amazonaws.com:5432/d3fit8gdg1cd51",
+      connectionString: "",
       ssl: {
         rejectUnauthorized: false
       }
     });
 
-     client.connect();
+    // client.connect();
 
-    console.log(`SAVING: PERSISTENCE goes here`);
+    console.error(`SAVING: PERSISTENCE would go here`);
 
      client.query('SELECT $1::text as message', ['Hello world!'], (err, res) => {
       console.log(res.rows);

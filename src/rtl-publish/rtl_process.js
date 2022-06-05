@@ -23,23 +23,28 @@ module.exports = {
   process_input: function (line, mode = 'weather') {
     datas = {};
     datas = line.split(",");
-    if (datas.length == 14 && mode == 'weather') { //Data Length varies, based on RTL-433 formats/parameters passed in
+    if (datas.length == 16 && mode == 'weather') { //Data Length varies, based on RTL-433 formats/parameters passed in
       // this is only good for weather formats (-R 166 and -R 175 are the key for me)
       // But I should probably look for new devices as well....
+      // time, msg, codes, model, id, seq, flags, temp_c, humidity, wind_avg_kmh, wind_dir, mic, battery_ok, startup, rain_mm, rain_mm2
       result = {
         "dtg": new Date(datas[0]),
         "model": datas[3],
         "sensorId": parseInt(datas[4]),
         "seq": parseInt(datas[5]),
         "lowbattery": parseInt(datas[6]),
+        "battery_ok": parseInt(datas[12]),
+        "mic": parseInt(datas[11]),
+        "startup": parseInt(datas[13]),
         "temperatureC": parseFloat(datas[7]),
         "temperatureF": (parseFloat(datas[7])*(9/5)) + 32,
         "humidity": parseInt(datas[8]),
         "wind_kph": parseFloat(datas[9]),
         "wind_dir": parseInt(datas[10]),
-        "rain1": parseFloat(datas[12]),
-        "rain2": parseFloat(datas[13]),
-        "rain_diff": parseFloat(datas[13]) - parseFloat(datas[12])
+        "rain1_mm": parseFloat(datas[14]),
+        "rain2_mm": parseFloat(datas[15]),
+        "rain_diff_mm": parseFloat(datas[15]) - parseFloat(datas[14]),
+        "rain_diff_in": (parseFloat(datas[15]) - parseFloat(datas[14]))/25.4
       };
       console.debug('data:', result);
       /*

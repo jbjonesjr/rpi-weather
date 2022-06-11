@@ -2,7 +2,7 @@ const { Client } = require('pg');
 //docs: https://www.npmjs.com/package/postgres
 
 let spawn = require('child_process').spawn;
-let rtl_process = require('./rtl_process')
+let rtl_process = require('./src/rtl_process')
 
 const mode = 'weather';
 const weatherModels = ["-R", "166", "-R", "175"];

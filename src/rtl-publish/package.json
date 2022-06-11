@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "run:local": "node index.js"
+    "run-local": "node index.js"
   },
   "repository": {
     "type": "git",
@@ -19,6 +19,8 @@
   "homepage": "https://github.com/jbjonesjr/rpi-weather#readme",
   "dependencies": {
     "@rauschma/stringio": "^1.4.0",
-    "pg": "^8.6.0"
+    "pg": "^8.6.0",
+    "line-by-line": "0.1.6",
+    "dotenv": "^16.0.1"
   }
 }

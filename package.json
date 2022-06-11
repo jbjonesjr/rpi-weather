@@ -12,7 +12,7 @@
     "start:dev": "npm run start:client & npm run start:server",
     "start:client": "",
     "start:server": "(cd ./src/server && npm run start:watch)",
-    "test": "node ./tests/rtl_publish/tests.js"
+    "test": "node ./src/rtl-publish/tests/tests.js"
   },
   "repository": {
     "type": "git",

@@ -1,6 +1,3 @@
-const { Client } = require('pg');
-//docs: https://www.npmjs.com/package/postgres
-
 let spawn = require('child_process').spawn;
 let rtl_process = require('./src/rtl_process')
 

@@ -76,7 +76,7 @@ module.exports = {
   persist_data: function (data) {
     //connect to a heroku pgsql database using an env variable
     process.env.NODE_TLS_REJECT_UNAUTHORIZED=0
-      console.log("Connecting to database...");
+      console.log("Connecting to database...",process.env.DATABASE_URL);
     const client = new Client({
       connectionString: process.env.DATABASE_URL,
       ssl: true

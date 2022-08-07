@@ -1,12 +1,30 @@
 const express = require('express');
 const path = require('path');
+//let rtl_process = require("../../src/rtl-publish/rtl_process.js");
+
+
+// use process.env.DATABASE_URL instead
+// const client = new Client({
+//   connectionString: "postgresql-defined-56618",
+//   ssl: {
+//     rejectUnauthorized: false
+//   }
+// });
+
+
+
 
 const app = express();
 
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, 'client/build')));
 
-// Put all API endpoints under '/api'
+/*
+ API Design:
+   Put all API endpoints under '/api'
+ */
+
+// Validate the system is running
 app.get('/api/test', (req, res) => {
   // Return them as json
   res.json('hello world');
@@ -14,15 +32,6 @@ app.get('/api/test', (req, res) => {
   console.log(`responded to /api/test route`);
 });
 
-let fetch_current_conditions = ()=>{
-    return conditions = {
-        temperate_f: 00,
-        humidty_perc: 00,
-        wind_dir: 00,
-        wind_speed_mph: 00,
-        rainfall_rate_in: 00
-    };
-}
 app.get('/api/weather/current', (req, res) => {
   let conditions = fetch_current_conditions()
     res.json(conditions);
@@ -33,6 +42,25 @@ app.get('/api/weather/current', (req, res) => {
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname+'/../app/build/index.html'));
 });
+
+let fetch_current_conditions = ()=>{
+  client.connect();
+
+  client.query('SELECT table_schema,table_name FROM information_schema.tables;', (err, res) => {
+    if (err) throw err;
+    for (let row of res.rows) {
+      console.log(JSON.stringify(row));
+    }
+    client.end();
+  });
+    return conditions = {
+        temperate_f: 00,
+        humidty_perc: 00,
+        wind_dir: 00,
+        wind_speed_mph: 00,
+        rainfall_rate_in: 00
+    };
+}
 
 const port = process.env.PORT || 5000;
 app.listen(port);

@@ -14,8 +14,7 @@ client.connect();
 
 const app = express();
 
-// Serve static files from the React app
-app.use(express.static(path.join(__dirname, 'client/build')));
+app.use(express.static(path.join(__dirname, 'public')));
 
 /*
  API Design:
@@ -25,23 +24,19 @@ app.use(express.static(path.join(__dirname, 'client/build')));
 // Validate the system is running
 app.get('/api/test', (req, res) => {
   // Return them as json
-  res.json('hello world');
-
+  res.json('.,;:. hello world');
   console.log(`responded to /api/test route`);
 });
 
 app.get('/api/weather/current', (req, res) => {
-  
   let conditions = fetch_current_conditions().then(result => {console.log(result); res.json(result);}).catch(err => {console.log(err); res.json(err);});
   console.log('f(x) return', conditions);
-  
-  
 });
 
 // The "catchall" handler: for any request that doesn't
-// match one above, send back React's index.html file.
+// match one above, send back the basic table of contents file.
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname + '/../app/build/index.html'));
+  res.sendFile(path.join(__dirname + '/index.html'));
 });
 
 let fetch_current_conditions = () => {

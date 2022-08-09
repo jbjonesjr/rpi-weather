@@ -94,7 +94,7 @@ let fetch_current_conditions = () => {
         console.log(`fetched current conditions`);
 
         return conditions = {
-          obs: result.rows[0].observed_at,
+          obs: result.rows[0].time,
           temperate_f: result.rows[0].temp_f,
           humidty_perc: result.rows[0].humidity,
           wind_dir: result.rows[0].wind_dir,

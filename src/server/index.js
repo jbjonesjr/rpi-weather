@@ -36,7 +36,7 @@ app.get('/api/weather/current', (req, res) => {
 // The "catchall" handler: for any request that doesn't
 // match one above, send back the basic table of contents file.
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname + '/index.html'));
+  res.sendFile(path.join(__dirname + '/public/index.html'));
 });
 
 let fetch_current_conditions = () => {

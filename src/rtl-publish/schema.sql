@@ -58,7 +58,7 @@ CREATE TABLE hourly_reports
     valid_hour_utc integer NOT NULL,
     max_temperature_f double precision NULL,
     min_temperature_f double precision NULL,
-    humidity double precision NULL,
+    avg_humidity double precision NULL,
     wind_kph double precision NULL,
     max_wind_kph double precision NULL,
     max_wind_kph_dir_deg double precision NULL,

@@ -25,7 +25,7 @@ Linkes to a more detailed description here: https://ranous.files.wordpress.com/2
 This seems pretty full featured: https://www.rtl-sdr.com/forum/viewtopic.php?t=1451#p15415
 
 
-RTL-443 is the key library it seems that makes this work. Very versatile with pre-configured support for many devices, including multiple la crosse ones.
+[RTL-443](https://github.com/merbanan/rtl_433) is the key library it seems that makes this work. Very versatile with pre-configured support for many devices, including multiple la crosse ones.
 Can't install it via package manager
 Raspbian has an OLDER VERSION in the `testing` stream, but not in the mainline. So between testing, and the old version
 https://repology.org/project/rtl-433/versions

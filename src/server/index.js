@@ -39,8 +39,20 @@ app.get('/api/weather/current', (req, res) => {
     });
 });
 
-app.get('/api/weather/almanac', (req, res) => {
+app.get(['/api/weather/almanac', '/api/weather/almanac/today'], (req, res) => {
   let conditions = fetch_almanac()
+    .then(result => {
+      console.log('f(x) alamanac data', result);
+      res.json(result);
+    })
+    .catch(err => {
+      console.log(err); res.json(err);
+    });
+});
+
+
+app.get('/api/weather/almanac/yesterday', (req, res) => {
+  let conditions = fetch_almanac_yesterday()
     .then(result => {
       console.log('f(x) alamanac data', result);
       res.json(result);
@@ -90,7 +102,35 @@ let fetch_almanac = () => {
 
     // Query the database for the current conditions and return them
     return client.query(queries.almanac_today)
-      
+    .then(result => {
+        console.log(`fetched daily almanac`);
+
+        return almanac = {
+          obs: result.rows[0]["observed day"],
+          max_temp: result.rows[0]["max temp"],
+          min_temp: result.rows[0]["min temp"],
+          max_wind: result.rows[0]["max wind"],
+          avg_wind: result.rows[0]["avg wind"],
+          max_hourly_rainfall_period: result.rows[0]["max hourly observed rainfall period"],
+          hourly_rainfall: result.rows[0]["total rainfall"]
+        };
+      }).catch(err => {
+        console.log(`error fetching current conditions`);
+        console.log(err);
+      });
+  }
+  catch (err) {
+    console.log(`error fetching current conditions`);
+    console.log(err);
+  }
+}
+
+let fetch_almanac_yesterday = () => {
+  try {
+    console.log(`fetching today's alamanac`);
+
+    // Query the database for the current conditions and return them
+    return client.query(queries.almanac_yesterday)
       .then(result => {
         console.log(`fetched daily almanac`);
 

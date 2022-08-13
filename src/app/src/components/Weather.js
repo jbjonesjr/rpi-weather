@@ -4,7 +4,6 @@ import React, { useState} from 'react';
 import Wrapper from './Wrapper';
 
 import { getWeather } from '../utils/fetchHelpers';
-
 import StyledWeather from './styles/StyledWeather';
 
 const Weather = () => {

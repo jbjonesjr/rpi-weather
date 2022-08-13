@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+// import React, { useState, useEffect } from 'react';
+import React, { useState} from 'react';
 
 import Wrapper from './Wrapper';
 
@@ -7,6 +8,26 @@ import { getWeather } from '../utils/fetchHelpers';
 import StyledWeather from './styles/StyledWeather';
 
 const Weather = () => {
+
+  const dateBuilder = (d) => {
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+    const day = days[d.getDay()];
+    const date = d.getDate();
+    const month = months[d.getMonth()];
+    const year = d.getFullYear();
+
+    return `${day} ${date} ${month} ${year}`;
+  }
+
+  async function fetchData(newLocation) {
+    const now = new Date();
+    setCurrentDate(dateBuilder(now));
+    const response = await getWeather(newLocation);
+    return response;
+  }
+
   const [inputLocation, setInputLocation] = useState('Embu');
   const [currentDate, setCurrentDate] = useState('');
   const [location, setLocation] = useState({
@@ -21,19 +42,12 @@ const Weather = () => {
     tempMin: 0
   });
 
-  useEffect(() => {
-    fetchData('São Paulo').then(([newWeather, placeName]) => {
-      setWeather(newWeather);
-      setLocation(placeName);
-    });
-  }, []);
-
-  async function fetchData(newLocation) {
-    const now = new Date();
-    setCurrentDate(dateBuilder(now));
-    const response = await getWeather(newLocation);
-    return response;
-  }
+  // useEffect(() => {
+  //   fetchData('São Paulo').then(([newWeather, placeName]) => {
+  //     setWeather(newWeather);
+  //     setLocation(placeName);
+  //   });
+  // }, []);
 
   const setBackground = () => {
     const now = new Date();
@@ -45,18 +59,6 @@ const Weather = () => {
       return 'green';
     }
     return 'orange';
-  }
-
-  const dateBuilder = (d) => {
-    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-
-    const day = days[d.getDay()];
-    const date = d.getDate();
-    const month = months[d.getMonth()];
-    const year = d.getFullYear();
-
-    return `${day} ${date} ${month} ${year}`;
   }
 
   const handleInputLocation = (e) => {

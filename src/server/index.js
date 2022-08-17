@@ -10,7 +10,7 @@ const __dirname = dirname(__filename);
 const app = express();
 
 app.use(express.static(path.join(__dirname, 'public')));
-// app.use("/",serverRouter);
+app.use("/",serverRouter);
 
 // The "catchall" handler: for any request that doesn't
 // match one above, send back the basic table of contents file.

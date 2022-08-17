@@ -154,7 +154,7 @@ const fetch = {
             console.log(err);
         }
     },
-    fetch_almanac_query: (date) => {
+    fetch_almanac_query: (year, month, date) => {
         const almanac_generic_query = `
         select count(observed_at) as "observations",
         max(date_trunc('day', observed_at)) as "observed day",
@@ -172,15 +172,15 @@ const fetch = {
         group by rain_by_time.time
         ) as "hourly_rainfall" group by date_trunc('day',hourly_rainfall.time)
           ) as "max_rainfall_hour"
-          on date_trunc('day', max_rainfall_hour.date) = date_trunc('day', (current_date - INTERVAL '1 day')::date)
-        where date_trunc('day', observed_at ) = date_trunc('day', (current_date  at time zone 'America/New_York' at time zone 'utc' - INTERVAL '${1} day')::date)
+          on date_trunc('day', max_rainfall_hour.date) = make_date($1,$2,$3)
+          where date_trunc('day', observed_at ) = make_date($1,$2,$3)
         group by date_trunc('day', observed_at )
         `;
         try {
             console.log(`fetching today's alamanac`);
 
             // Query the database for the current conditions and return them
-            return client.query(almanac_generic_query)
+            return client.query(almanac_generic_query,[year, month, date])
                 .then(result => {
                     console.log(`fetched daily almanac`);
 

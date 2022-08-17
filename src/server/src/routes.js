@@ -47,4 +47,15 @@ router.get(['/api/weather/almanac/today'], (req, res) => {
         });
 });
 
+router.get(['/api/weather/almanac/:year/:month/:day'], (req, res) => {
+    let conditions = fetchService.fetch_almanac_query(req.params.year, req.params.month, req.params.day)
+        .then(result => {
+            console.log('f(x) alamanac data', result);
+            res.json(result);
+        })
+        .catch(err => {
+            console.log(err); res.json(err);
+        });
+});
+
 export default router;

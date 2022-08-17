@@ -15,7 +15,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // The "catchall" handler: for any request that doesn't
 // match one above, send back the basic table of contents file.
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname + '/public/index.html'));
+  res.sendFile(path.join(__dirname, 'public/index.html'));
 });
 
 const port = process.env.PORT || 5000;

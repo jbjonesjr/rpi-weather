@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "startlocal": "export $(cat .env | xargs) && node index.js",
     "start": "node index.js"
   },
   "repository": {

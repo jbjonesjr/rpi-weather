@@ -14,7 +14,7 @@ router.get('/api/test', (req, res) => {
 });
 
 router.get('/api/weather/current', (req, res) => {
-    let conditions = fetchService.fetch_current_conditions()
+    fetchService.fetch_current_conditions()
         .then(result => {
             console.log('f(x) current conditions', result);
             res.json(result);
@@ -22,7 +22,7 @@ router.get('/api/weather/current', (req, res) => {
         .catch(err => {
             console.log(err); 
             res.json(err);
-        });
+        });  
 });
 
 router.get('/api/weather/almanac/yesterday', (req, res) => {

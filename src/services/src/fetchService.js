@@ -1,6 +1,6 @@
 import pg from 'pg';
 
-let Client = pg.Client;
+const {Client} = pg;
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0
 console.log("Connecting to database...", process.env.DATABASE_URL);
@@ -11,6 +11,7 @@ const client =  new Client({
     query_timeout: 10000
 
 });
+client.connect();
 
 const fetch = {
     fetch_current_conditions: () => {

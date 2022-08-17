@@ -70,7 +70,7 @@ group by rain_by_time.time
 ) as "hourly_rainfall" group by date_trunc('day',hourly_rainfall.time)
   ) as "max_rainfall_hour"
    on date_trunc('day', max_rainfall_hour.date) = date_trunc('day', (current_date - INTERVAL '1 day')::date)
-where date_trunc('day', observed_at ) = date_trunc('day', (current_date - INTERVAL '1 day')::date)
+where date_trunc('day', observed_at ) = date_trunc('day', (current_date at time zone 'America/New_York' at time zone 'utc' - INTERVAL '1 day')::date)
 group by date_trunc('day', observed_at )
 
 -- partial almanac
@@ -83,4 +83,4 @@ TRUNC(avg(wind_kph)::numeric,2) as "avg wind",
 max(rain_diff_mm) as "max hourly observed rainfall period",
 sum(rain_diff_mm) as "total rainfall"
 from reports
-where date_trunc('day', observed_at) = date_trunc('day', (current_date - INTERVAL '1 day')::date at time zone 'America/New_York' at time zone 'utc' )
+where date_trunc('day', observed_at) = date_trunc('day', (current_date at time zone 'America/New_York' at time zone 'utc' - INTERVAL '1 day')::date at time zone 'America/New_York' at time zone 'utc' )

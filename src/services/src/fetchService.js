@@ -77,7 +77,7 @@ const fetch = {
             });*/
     },
     fetch_almanac: (client) => {
-        const almanac_query = `
+        const almanac_today_query = `
         select count(observed_at) as "observations",
         max(date_trunc('day', observed_at)) as "observed day",
         max(TRUNC(temperature_f::numeric,2)) as "max temp",
@@ -103,7 +103,7 @@ const fetch = {
 
 
             // Query the database for the current conditions and return them
-            return client.query(almanac_query)
+            return client.query(almanac_today_query)
                 .then(result => {
                     console.log(`fetched daily almanac`);
 
@@ -127,7 +127,7 @@ const fetch = {
         }
     },
     fetch_almanac_yesterday: () => {
-        const almanac_yesterday = `
+        const almanac_yesterday_query = `
         select count(observed_at) as "observations",
         max(date_trunc('day', observed_at)) as "observed day",
         max(TRUNC(temperature_f::numeric,2)) as "max temp",
@@ -153,7 +153,7 @@ const fetch = {
             console.log(`fetching today's alamanac`);
 
             // Query the database for the current conditions and return them
-            return client.query(queries.almanac_yesterday)
+            return client.query(almanac_yesterday_query)
                 .then(result => {
                     console.log(`fetched daily almanac`);
 
@@ -177,7 +177,7 @@ const fetch = {
         }
     },
     fetch_almanac_query: (date) => {
-        const almanac_query = `
+        const almanac_generic_query = `
         select count(observed_at) as "observations",
         max(date_trunc('day', observed_at)) as "observed day",
         max(TRUNC(temperature_f::numeric,2)) as "max temp",
@@ -201,29 +201,8 @@ const fetch = {
         try {
             console.log(`fetching today's alamanac`);
 
-                const almanac_today = `
-                select count(observed_at) as "observations",
-                max(date_trunc('day', observed_at)) as "observed day",
-                max(TRUNC(temperature_f::numeric,2)) as "max temp",
-                min(TRUNC(temperature_f::numeric,2)) as "min temp",
-                max(wind_kph) as "max wind",
-                TRUNC(avg(wind_kph)::numeric,2) as "avg wind",
-                COALESCE(TRUNC((AVG(max_rainfall_hour.max_ranfall_value)/25.4)::numeric,2),0) as "max hourly observed rainfall period",
-                TRUNC((sum(rain_diff_mm)/25.4)::numeric,2) as "total rainfall"
-                from reports
-                left join (
-                  select date_trunc('day',hourly_rainfall.time) as "date", max(hourly_rainfall.observed_rainfall) as "max_ranfall_value" from (
-                    select rain_by_time.time, sum(rain_mm) as "observed_rainfall" from
-                ( select created_on, observed_at, date_trunc('hour', observed_at) as "time", rain_diff_mm as "rain_mm" from reports where rain_diff_mm > 0 ) as "rain_by_time"
-                group by rain_by_time.time
-                ) as "hourly_rainfall" group by date_trunc('day',hourly_rainfall.time)
-                  ) as "max_rainfall_hour"
-                  on date_trunc('day', max_rainfall_hour.date) = date_trunc('day', now() at time zone 'America/New_York' at time zone 'utc' )
-                where date_trunc('day', observed_at) = date_trunc('day', now() at time zone 'America/New_York' at time zone 'utc' )
-                group by date_trunc('day', observed_at)
-                `;
             // Query the database for the current conditions and return them
-            return client.query(almanac_today)
+            return client.query(almanac_generic_query)
                 .then(result => {
                     console.log(`fetched daily almanac`);
 

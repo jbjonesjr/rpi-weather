@@ -40,29 +40,9 @@ const fetch = {
 
         return client.query(conditions_query)
             .then(result => {
-                return results.rows;
+               console.log("current conditions returned, raw results:", result.rows);
                 
-                // return conditions = {
-                //     obs: result.rows[0].time,
-                //     temperate_f: result.rows[0].temp_f,
-                //     humidty_perc: result.rows[0].humidity,
-                //     wind_dir: result.rows[0].wind_dir,
-                //     wind_speed_mph: result.rows[0].wind_kph,
-                //     rainfall_rate_in: result.rows[0].rain_rate
-                // };
-            }).then(() => {
-                client.end();
-            }).catch(err => {
-                console.log(err);
-                return err;
-            })
-           /* return new Promise(() => {
-
-                client.query(conditions_query)
-                .then(result => {
-                    console.log(`fetched current conditions`);
-
-                    return conditions = {
+                return {
                         obs: result.rows[0].time,
                         temperate_f: result.rows[0].temp_f,
                         humidty_perc: result.rows[0].humidity,
@@ -73,10 +53,9 @@ const fetch = {
                 }).catch(err => {
                     console.log(`error fetching current conditions`);
                     console.log(err);
-                });
-            });*/
+            })
     },
-    fetch_almanac: (client) => {
+    fetch_almanac: () => {
         const almanac_today_query = `
         select count(observed_at) as "observations",
         max(date_trunc('day', observed_at)) as "observed day",
@@ -101,13 +80,12 @@ const fetch = {
         try {
             console.log(`fetching today's alamanac`);
 
-
             // Query the database for the current conditions and return them
             return client.query(almanac_today_query)
                 .then(result => {
                     console.log(`fetched daily almanac`);
 
-                    return almanac = {
+                    return {
                         obs: result.rows[0]["observed day"],
                         max_temp: result.rows[0]["max temp"],
                         min_temp: result.rows[0]["min temp"],
@@ -117,12 +95,12 @@ const fetch = {
                         hourly_rainfall: result.rows[0]["total rainfall"]
                     };
                 }).catch(err => {
-                    console.log(`error fetching current conditions`);
+                    console.log(`error querying today's almanac`);
                     console.log(err);
                 });
         }
         catch (err) {
-            console.log(`error fetching current conditions`);
+            console.log(`error fetching today's almanac`);
             console.log(err);
         }
     },
@@ -157,7 +135,7 @@ const fetch = {
                 .then(result => {
                     console.log(`fetched daily almanac`);
 
-                    return almanac = {
+                    return {
                         obs: result.rows[0]["observed day"],
                         max_temp: result.rows[0]["max temp"],
                         min_temp: result.rows[0]["min temp"],
@@ -167,12 +145,12 @@ const fetch = {
                         hourly_rainfall: result.rows[0]["total rainfall"]
                     };
                 }).catch(err => {
-                    console.log(`error fetching current conditions`);
+                    console.log(`error querying yesterday's alamanac`);
                     console.log(err);
                 });
         }
         catch (err) {
-            console.log(`error fetching current conditions`);
+            console.log(`error fetching yesterday's alamanac`);
             console.log(err);
         }
     },
@@ -206,7 +184,7 @@ const fetch = {
                 .then(result => {
                     console.log(`fetched daily almanac`);
 
-                    return almanac = {
+                    return {
                         obs: result.rows[0]["observed day"],
                         max_temp: result.rows[0]["max temp"],
                         min_temp: result.rows[0]["min temp"],

@@ -43,16 +43,16 @@ const fetch = {
                console.log("current conditions returned, raw results:", result.rows);
                 
                 return {
-                        obs: result.rows[0].time,
-                        temperate_f: result.rows[0].temp_f,
-                        humidty_perc: result.rows[0].humidity,
-                        wind_dir: result.rows[0].wind_dir,
-                        wind_speed_mph: result.rows[0].wind_kph,
-                        rainfall_rate_in: result.rows[0].rain_rate
-                    };
-                }).catch(err => {
-                    console.log(`error fetching current conditions`);
-                    console.log(err);
+                    obs: result.rows[0].time,
+                    temperate_f: result.rows[0].temp_f,
+                    humidty_perc: result.rows[0].humidity,
+                    wind_dir: result.rows[0].wind_dir,
+                    wind_speed_mph: result.rows[0].wind_kph,
+                    rainfall_rate_in: result.rows[0].rain_rate
+                };
+            }).catch(err => {
+                console.log(`error fetching current conditions`);
+                console.log(err);
             })
     },
     fetch_almanac: () => {
@@ -63,17 +63,17 @@ const fetch = {
         min(TRUNC(temperature_f::numeric,2)) as "min temp",
         max(wind_kph) as "max wind",
         TRUNC(avg(wind_kph)::numeric,2) as "avg wind",
-        COALESCE(TRUNC((AVG(max_rainfall_hour.max_ranfall_value)/25.4)::numeric,2),0) as "max hourly observed rainfall period",
-        TRUNC((sum(rain_diff_mm)/25.4)::numeric,2) as "total rainfall"
+        COALESCE(AVG(max_rainfall_hour.max_ranfall_value),0) as "max hourly observed rainfall period",
+        sum(rain_diff_mm) as "total rainfall"
         from reports
         left join (
-          select date_trunc('day',hourly_rainfall.time) as "date", max(hourly_rainfall.observed_rainfall) as "max_ranfall_value" from (
+        select date_trunc('day',hourly_rainfall.time) as "date", max(hourly_rainfall.observed_rainfall) as "max_ranfall_value" from (
             select rain_by_time.time, sum(rain_mm) as "observed_rainfall" from
         ( select created_on, observed_at, date_trunc('hour', observed_at) as "time", rain_diff_mm as "rain_mm" from reports where rain_diff_mm > 0 ) as "rain_by_time"
         group by rain_by_time.time
         ) as "hourly_rainfall" group by date_trunc('day',hourly_rainfall.time)
-          ) as "max_rainfall_hour"
-          on date_trunc('day', max_rainfall_hour.date) = date_trunc('day', now() at time zone 'America/New_York' at time zone 'utc' )
+        ) as "max_rainfall_hour"
+        on date_trunc('day', max_rainfall_hour.date) = date_trunc('day', now() at time zone 'America/New_York' at time zone 'utc' )
         where date_trunc('day', observed_at) = date_trunc('day', now() at time zone 'America/New_York' at time zone 'utc' )
         group by date_trunc('day', observed_at)
         `;
@@ -112,18 +112,18 @@ const fetch = {
         min(TRUNC(temperature_f::numeric,2)) as "min temp",
         max(wind_kph) as "max wind",
         TRUNC(avg(wind_kph)::numeric,2) as "avg wind",
-        COALESCE(TRUNC((AVG(max_rainfall_hour.max_ranfall_value)/25.4)::numeric,2),0) as "max hourly observed rainfall period",
-        TRUNC((sum(rain_diff_mm)/25.4)::numeric,2) as "total rainfall"
+        AVG(max_rainfall_hour.max_ranfall_value) as "max hourly observed rainfall period",
+        sum(reports.rain_diff_mm) as "total rainfall"
         from reports
         left join (
-          select date_trunc('day',hourly_rainfall.time) as "date", max(hourly_rainfall.observed_rainfall) as "max_ranfall_value" from (
+        select date_trunc('day',hourly_rainfall.time) as "date", max(hourly_rainfall.observed_rainfall) as "max_ranfall_value" from (
             select rain_by_time.time, sum(rain_mm) as "observed_rainfall" from
         ( select created_on, observed_at, date_trunc('hour', observed_at) as "time", rain_diff_mm as "rain_mm" from reports where rain_diff_mm > 0 ) as "rain_by_time"
         group by rain_by_time.time
         ) as "hourly_rainfall" group by date_trunc('day',hourly_rainfall.time)
-          ) as "max_rainfall_hour"
-          on date_trunc('day', max_rainfall_hour.date) = date_trunc('day', (current_date - INTERVAL '1 day')::date)
-        where date_trunc('day', observed_at ) = date_trunc('day', (current_date at time zone 'America/New_York' at time zone 'utc' - INTERVAL '1 day')::date)
+        ) as "max_rainfall_hour"
+        on date_trunc('day', max_rainfall_hour.date) = date_trunc('day', (now() - INTERVAL '1 day')::date)
+        where date_trunc('day', observed_at ) = date_trunc('day', (now() at time zone 'America/New_York' at time zone 'utc' - INTERVAL '1 day')::date)
         group by date_trunc('day', observed_at )
         `;
 

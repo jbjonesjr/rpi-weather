@@ -1,6 +1,7 @@
-const express = require('express');
+import express from 'express';
+import fetchService from '../../services/src/fetchService.js';
 
-const router = express.Router();
+let router = express.Router();
 
 /*
  API Design:
@@ -45,4 +46,4 @@ router.get('/api/weather/almanac/yesterday', (req, res) => {
         });
 });
 
-module.exports = router;
+export default router;

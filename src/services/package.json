@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Data Access and processing services for the RPI-Weather project",
   "main": "index.js",
+  "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -10,10 +11,14 @@
     "type": "git",
     "url": "git+https://github.com/jbjonesjr/rpi-weather.git"
   },
+  "type":"module",
   "author": "@jbjonesjr",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/jbjonesjr/rpi-weather/issues"
   },
-  "homepage": "https://github.com/jbjonesjr/rpi-weather#readme"
+  "homepage": "https://github.com/jbjonesjr/rpi-weather#readme",
+  "dependencies": {
+    "pg": "^8.7.3"
+  }
 }

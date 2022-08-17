@@ -13,6 +13,7 @@
   },
   "author": "@jbjonesjr",
   "license": "ISC",
+  "type":"module",
   "bugs": {
     "url": "https://github.com/jbjonesjr/rpi-weather/issues"
   },

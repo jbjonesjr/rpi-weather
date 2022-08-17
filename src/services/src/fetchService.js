@@ -1,7 +1,16 @@
-const { Client } = require('pg');
-const queries = require('../services/src/queries.js');
+import pg from 'pg';
 
-modules.export = {
+let Client = pg.Client;
+
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0
+console.log("Connecting to database...", process.env.DATABASE_URL);
+
+const client =  new Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: true,
+    query_timeout: 10000
+
+});
     fetch_current_conditions: () => {
         try {
             console.log(`fetching current conditions`);

@@ -35,7 +35,8 @@ router.get('/api/weather/almanac/yesterday', (req, res) => {
             console.log(err); res.json(err);
         });
 });
-router.get(['/api/weather/almanac', '/api/weather/almanac/today'], (req, res) => {
+// router.get(['/api/weather/almanac', '/api/weather/almanac/today'], (req, res) => {
+router.get(['/api/weather/almanac/today'], (req, res) => {
     let conditions = fetchService.fetch_almanac()
         .then(result => {
             console.log('f(x) alamanac data', result);

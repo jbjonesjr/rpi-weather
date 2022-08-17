@@ -17,6 +17,7 @@
     "url": "https://github.com/jbjonesjr/rpi-weather/issues"
   },
   "homepage": "https://github.com/jbjonesjr/rpi-weather#readme",
+  "type":"module",
   "dependencies": {
     "@rauschma/stringio": "^1.4.0",
     "pg": "^8.6.0",

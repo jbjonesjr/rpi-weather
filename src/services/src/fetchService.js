@@ -14,42 +14,24 @@ const client =  new Client({
 
 const fetch = {
     fetch_current_conditions: () => {
-        // const conditions_query = `
-        // SELECT observed_at as "time", 
-        // TRUNC(temperature_f::numeric,2) as "temp_f", 
-        // wind_kph as "wind", wind_dir_deg as wind_dir, 
-        // TRUNC(current_rain.obsered_rainfall::numeric,2) as "hourly_rain",
-        // humidity 
-        // FROM reports 
-        // join ( 
-        // select TRUNC((sum(rain_mm)/25.4)::numeric,2) as "obsered_rainfall" from
-        // ( select date_trunc('hour', observed_at) as "time", rain_diff_mm as "rain_mm" from reports where sensor_id = 1 and date_trunc('hour', observed_at) = date_trunc('hour', now() at time zone 'America/New_York' at time zone 'utc' ) ) as "hourly rainfall"
-        // group by time order by time desc
-        // ) as "current_rain" on 1=1
-        // WHERE NOT EXISTS (
-        //   SELECT * 
-        //   FROM reports AS reports_temp 
-        //   WHERE reports.sensor_id = reports_temp.sensor_id 
-        //   AND reports.observed_at < reports_temp.observed_at) 
-        // and sensor_id = '2'
-        // `;
-
-        // const conditions_query = `
-        // SELECT observed_at as "time", 
-        // TRUNC(temperature_f::numeric,2) as "temp_f", 
-        // wind_kph as "wind", wind_dir_deg as wind_dir,
-        // humidity 
-        // FROM reports 
-        // WHERE sensor_id = '2' 
-        // ORDER BY observed_at DESC
-        // LIMIT 1
-        // `;
-
         const conditions_query = `
-        SELECT observed_at as "time"        
-        FROM reports  
-        ORDER BY observed_at DESC
-        LIMIT 1
+        SELECT observed_at as "time", 
+        TRUNC(temperature_f::numeric,2) as "temp_f", 
+        wind_kph as "wind", wind_dir_deg as wind_dir, 
+        TRUNC(current_rain.obsered_rainfall::numeric,2) as "hourly_rain",
+        humidity 
+        FROM reports 
+        join ( 
+        select TRUNC((sum(rain_mm)/25.4)::numeric,2) as "obsered_rainfall" from
+        ( select date_trunc('hour', observed_at) as "time", rain_diff_mm as "rain_mm" from reports where sensor_id = 1 and date_trunc('hour', observed_at) = date_trunc('hour', now() at time zone 'America/New_York' at time zone 'utc' ) ) as "hourly rainfall"
+        group by time order by time desc
+        ) as "current_rain" on 1=1
+        WHERE NOT EXISTS (
+          SELECT * 
+          FROM reports AS reports_temp 
+          WHERE reports.sensor_id = reports_temp.sensor_id 
+          AND reports.observed_at < reports_temp.observed_at) 
+        and sensor_id = '2'
         `;
 
         // perform pg query and return the results in a promise
@@ -162,7 +144,7 @@ const fetch = {
         ) as "hourly_rainfall" group by date_trunc('day',hourly_rainfall.time)
           ) as "max_rainfall_hour"
           on date_trunc('day', max_rainfall_hour.date) = date_trunc('day', (current_date - INTERVAL '1 day')::date)
-        where date_trunc('day', observed_at ) = date_trunc('day', (current_date - INTERVAL '1 day')::date)
+        where date_trunc('day', observed_at ) = date_trunc('day', (current_date at time zone 'America/New_York' at time zone 'utc' - INTERVAL '1 day')::date)
         group by date_trunc('day', observed_at )
         `;
 
@@ -212,7 +194,7 @@ const fetch = {
         ) as "hourly_rainfall" group by date_trunc('day',hourly_rainfall.time)
           ) as "max_rainfall_hour"
           on date_trunc('day', max_rainfall_hour.date) = date_trunc('day', (current_date - INTERVAL '1 day')::date)
-        where date_trunc('day', observed_at ) = date_trunc('day', (current_date - INTERVAL '${1} day')::date)
+        where date_trunc('day', observed_at ) = date_trunc('day', (current_date  at time zone 'America/New_York' at time zone 'utc' - INTERVAL '${1} day')::date)
         group by date_trunc('day', observed_at )
         `;
         try {

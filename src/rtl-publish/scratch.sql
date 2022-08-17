@@ -47,3 +47,4 @@ select date_trunc('day', observed_at), * from reports where date_trunc('day', ob
 SELECT observed_at, date_trunc('day', observed_at::date at time zone 'America/New_York' at time zone 'utc' ), current_date, now(), now() at time zone 'America/New_York' at time zone 'utc' as "now in US EAST", (current_date - INTERVAL '0 day')::date as "currdate-0", (current_date - INTERVAL '1 day')::date as "currdate-1" from reports order by observed_at desc LIMIT 1 ;
 select now(),now() at time zone 'America/New_York' at time zone 'utc' , * from reports order by observed_at desc
 select now() at time zone 'utc' at time zone 'utc';
+select date_trunc('day', (current_date at time zone 'America/New_York' at time zone 'utc' - INTERVAL '0 day')::date);

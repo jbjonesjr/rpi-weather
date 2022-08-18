@@ -3,6 +3,11 @@ import fetchService from '../../services/src/fetchService.js';
 
 let router = express.Router();
 
+/* Notes:
+https://www.codegrepper.com/code-examples/javascript/import+%7B+Router+%7D+from+%27express%27%3B+const+router+%3D+express.Router%28%29%3B
+
+*/
+
 /*
  API Design:
    Put all API endpoints under '/api'

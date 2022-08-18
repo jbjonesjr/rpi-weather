@@ -58,7 +58,7 @@ const fetch = {
     fetch_almanac: () => {
         const almanac_today_query = `
         select count(observed_at) as "observations",
-        max(date_trunc('day', observed_at)) as "observed day",
+        max(TO_CHAR(observed_at::date, 'yyyy-mm-dd')) "observed day",
         max(TRUNC(temperature_f::numeric,2)) as "max temp",
         min(TRUNC(temperature_f::numeric,2)) as "min temp",
         max(wind_kph) as "max wind",
@@ -107,7 +107,7 @@ const fetch = {
     fetch_almanac_yesterday: () => {
         const almanac_yesterday_query = `
         select count(observed_at) as "observations",
-        max(date_trunc('day', observed_at)) as "observed day",
+        max(TO_CHAR(observed_at::date, 'yyyy-mm-dd')) "observed day",
         max(TRUNC(temperature_f::numeric,2)) as "max temp",
         min(TRUNC(temperature_f::numeric,2)) as "min temp",
         max(wind_kph) as "max wind",
@@ -157,7 +157,7 @@ const fetch = {
     fetch_almanac_query: (year, month, date) => {
         const almanac_generic_query = `
         select count(observed_at) as "observations",
-        max(date_trunc('day', observed_at)) as "observed day",
+        max(TO_CHAR(observed_at::date, 'yyyy-mm-dd')) "observed day",
         max(TRUNC(temperature_f::numeric,2)) as "max temp",
         min(TRUNC(temperature_f::numeric,2)) as "min temp",
         max(wind_kph) as "max wind",

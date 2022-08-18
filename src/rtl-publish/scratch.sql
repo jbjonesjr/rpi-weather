@@ -42,6 +42,25 @@ where date_trunc('day', observed_at) = date_trunc('day', now() at time zone 'Ame
 
 
 -- date work
+-- https://www.postgresql.org/docs/current/datatype-datetime.html
+-- https://www.postgresql.org/docs/current/functions-formatting.html
+-- https://blog.quest.com/exploring-postgres-date-formats-and-their-different-functions/
+-- https://popsql.com/learn-sql/postgresql/how-to-convert-utc-to-local-time-zone-in-postgresql
+
+
+
+SELECT now(), now()::date, 
+DATE_TRUNC('day',now()), 
+now() at time zone 'America/New_York' as "now to NY", 
+now() at time zone 'utc' as "now to UTC",
+now() at time zone 'America/New_York' at time zone 'utc' as "now to NY to UTC",
+DATE_TRUNC('day',now() at time zone 'America/New_York'),
+DATE_TRUNC('day',now() at time zone 'utc'),
+DATE_TRUNC('day',now() at time zone 'America/New_York' at time zone 'utc')
+;
+
+select observed_at at time zone 'utc' from reports LIMIT 1;
+
 select date_trunc('day', observed_at), * from reports where date_trunc('day', observed_at::date) = date_trunc('day', (current_date - INTERVAL '0 day')::date at time zone 'America/New_York' at time zone 'utc' );
 select date_trunc('day', observed_at), * from reports where date_trunc('day', observed_at) = date_trunc('day', (current_date) at time zone 'America/New_York' at time zone 'utc' );
 SELECT observed_at, date_trunc('day', observed_at::date at time zone 'America/New_York' at time zone 'utc' ), current_date, now(), now() at time zone 'America/New_York' at time zone 'utc' as "now in US EAST", (current_date - INTERVAL '0 day')::date as "currdate-0", (current_date - INTERVAL '1 day')::date as "currdate-1" from reports order by observed_at desc LIMIT 1 ;

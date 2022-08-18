@@ -1,5 +1,5 @@
 -- current conditions
-SELECT observed_at as "time", 
+SELECT (observed_at at time zone 'America/New_York') as "time", 
 TRUNC(temperature_f::numeric,2) as "temp_f", 
 wind_kph as "wind", wind_dir_deg as wind_dir, 
 current_rain.obsered_rainfall as "hourly_rain",

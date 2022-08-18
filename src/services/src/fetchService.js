@@ -16,7 +16,7 @@ client.connect();
 const fetch = {
     fetch_current_conditions: () => {
         const conditions_query = `
-        SELECT observed_at as "time", 
+        SELECT (observed_at at time zone 'America/New_York') as "time", 
         TRUNC(temperature_f::numeric,2) as "temp_f", 
         wind_kph as "wind", wind_dir_deg as wind_dir, 
         TRUNC(current_rain.obsered_rainfall::numeric,2) as "hourly_rain",

@@ -1,5 +1,4 @@
-// import React, { useState, useEffect } from 'react';
-import React, { useState} from 'react';
+import React, { useState, useEffect } from 'react';
 
 import Wrapper from './Wrapper';
 
@@ -7,6 +6,14 @@ import { getWeather } from '../utils/fetchHelpers';
 import StyledWeather from './styles/StyledWeather';
 
 const Weather = () => {
+
+  const [currentDate, setCurrentDate] = useState('');
+  const [weather, setWeather] = useState({
+    currentTemp: 0,
+    weatherMain: '',
+    tempMax: 0,
+    tempMin: 0
+  });
 
   const dateBuilder = (d) => {
     const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -17,36 +24,22 @@ const Weather = () => {
     const month = months[d.getMonth()];
     const year = d.getFullYear();
 
-    return `${day} ${date} ${month} ${year}`;
+    return `${day} ${date} ${month} ${year} (${d.getHours()%12}:${d.getMinutes()} ${d.getHours() > 12 ? 'PM' : 'AM'})`;
   }
 
-  async function fetchData(newLocation) {
+  async function fetchData() {
     const now = new Date();
-    setCurrentDate(dateBuilder(now));
-    const response = await getWeather(newLocation);
+    const response = await getWeather();
+    setCurrentDate(dateBuilder(response.observation_time));
     return response;
   }
 
-  const [inputLocation, setInputLocation] = useState('Embu');
-  const [currentDate, setCurrentDate] = useState('');
-  const [location, setLocation] = useState({
-    city: '',
-    state: '',
-    country: ''
-  });
-  const [weather, setWeather] = useState({
-    currentTemp: 0,
-    weatherMain: '',
-    tempMax: 0,
-    tempMin: 0
-  });
-
-  // useEffect(() => {
-  //   fetchData('São Paulo').then(([newWeather, placeName]) => {
-  //     setWeather(newWeather);
-  //     setLocation(placeName);
-  //   });
-  // }, []);
+  useEffect(() => {
+    console.debug('use effect called');
+    fetchData().then(([newWeather]) => {
+      setWeather(newWeather);
+    });
+  }, []);
 
   const setBackground = () => {
     const now = new Date();
@@ -60,22 +53,9 @@ const Weather = () => {
     return 'orange';
   }
 
-  const handleInputLocation = (e) => {
-    e.preventDefault();
-    setInputLocation(e.target.value);
-  }
-
-  const getForecast = (e) => {
-    e.preventDefault();
-    fetchData(inputLocation).then(([newWeather, placeName]) => {
-      setWeather(newWeather);
-      setLocation(placeName);
-    });
-  }
-
   return (
     <StyledWeather bgImage={setBackground()}>
-      <Wrapper states={{ location, currentDate, weather }} handleInput={handleInputLocation} handleSubmit={getForecast} />
+      <Wrapper states={{ currentDate, weather }} />
     </StyledWeather>
   );
 }

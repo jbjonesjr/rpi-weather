@@ -12,7 +12,8 @@ const Weather = () => {
     currentTemp: 0,
     weatherMain: '',
     tempMax: 0,
-    tempMin: 0
+    tempMin: 0,
+    totalRainfall: 0
   });
 
   const dateBuilder = (d) => {

@@ -14,7 +14,7 @@ const Weather = () => {
     tempMax: 0,
     tempMin: 0,
     totalRainfall: 0
-  });
+    });
 
   const dateBuilder = (d) => {
     const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -25,13 +25,13 @@ const Weather = () => {
     const month = months[d.getMonth()];
     const year = d.getFullYear();
 
-    return `${day} ${date} ${month} ${year} (${d.getHours()%12}:${d.getMinutes()} ${d.getHours() > 12 ? 'PM' : 'AM'})`;
+    return `${day} ${date} ${month} ${year} (${d.getHours()%12}:${String(d.getMinutes()).padStart(2,0)} ${d.getHours() > 12 ? 'PM' : 'AM'})`;
   }
 
   async function fetchData() {
-    const now = new Date();
     const response = await getWeather();
-    setCurrentDate(dateBuilder(response.observation_time));
+    let dt = new Date(Date.parse(response[0].observation_time));
+    setCurrentDate(dateBuilder(dt));
     return response;
   }
 

@@ -15,5 +15,5 @@ export const getWeather = async () => {
   });
 
   console.debug("api results",conditions_data, almanac_data);
-  return [{ observation_time: conditions_data.observed_at, currentTemp: conditions_data.temperate_f, weatherMain: "unk", "tempMax": almanac_data.max_temp, "tempMin": almanac_data.min_temp }, "Waynewood"];
+  return [{ observation_time: conditions_data.obs, currentTemp: conditions_data.temperate_f, weatherMain: "unk", "tempMax": almanac_data.max_temp, "tempMin": almanac_data.min_temp, "totalRainfall": almanac_data.total_rainfall }, "Waynewood"];
 }

@@ -40,7 +40,7 @@ const fetch = {
 
         return client.query(conditions_query)
             .then(result => {
-                if(result.length() == 0) {
+                if(result.length == 0) {
                     return null;
                 }
 

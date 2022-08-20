@@ -40,6 +40,10 @@ const fetch = {
 
         return client.query(conditions_query)
             .then(result => {
+                if(result.length() == 0) {
+                    return null;
+                }
+
                console.log("current conditions returned, raw results:", result.rows);
                 
                 return {
@@ -92,7 +96,7 @@ const fetch = {
                         max_wind: result.rows[0]["max wind"],
                         avg_wind: result.rows[0]["avg wind"],
                         max_hourly_rainfall_period: result.rows[0]["max hourly observed rainfall period"],
-                        hourly_rainfall: result.rows[0]["total rainfall"]
+                        total_rainfall: result.rows[0]["total rainfall"]
                     };
                 }).catch(err => {
                     console.log(`error querying today's almanac`);
@@ -142,7 +146,7 @@ const fetch = {
                         max_wind: result.rows[0]["max wind"],
                         avg_wind: result.rows[0]["avg wind"],
                         max_hourly_rainfall_period: result.rows[0]["max hourly observed rainfall period"],
-                        hourly_rainfall: result.rows[0]["total rainfall"]
+                        total_rainfall: result.rows[0]["total rainfall"]
                     };
                 }).catch(err => {
                     console.log(`error querying yesterday's alamanac`);
@@ -191,7 +195,7 @@ const fetch = {
                         max_wind: result.rows[0]["max wind"],
                         avg_wind: result.rows[0]["avg wind"],
                         max_hourly_rainfall_period: result.rows[0]["max hourly observed rainfall period"],
-                        hourly_rainfall: result.rows[0]["total rainfall"]
+                        total_rainfall: result.rows[0]["total rainfall"]
                     };
                 }).catch(err => {
                     console.log(`error fetching current conditions`);

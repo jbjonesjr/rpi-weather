@@ -19,6 +19,9 @@ router.get('/api/test', (req, res) => {
 });
 
 router.get('/api/weather/current', (req, res) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+   
     fetchService.fetch_current_conditions()
         .then(result => {
             console.log('f(x) current conditions', result);

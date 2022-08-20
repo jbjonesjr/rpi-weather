@@ -11,7 +11,7 @@
     "start": "npm run start:prod",
     "start:prod": "(cd ./src/server && node index.js)",
     "start:dev": "npm run start:client & npm run start:server",
-    "start:client": "",
+    "start:client": "(cd ./src/app && npm start)",
     "start:server": "(cd ./src/server && npm run start:watch)",
     "test": "node ./src/rtl-publish/tests/tests.js"
   },

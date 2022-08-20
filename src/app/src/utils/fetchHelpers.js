@@ -1,20 +1,19 @@
 
-export const getWeather = async (location) => {
+export const getWeather = async () => {
 
- const urlJBJ = `https://weather-rpi.herokuapp.com/api/weather/current`;
+  console.log('fetching data');
+  const conditions_url = `https://jbjonesjr-weather-server.herokuapp.com/api/weather/current`;
+  const almanac_url = `https://jbjonesjr-weather-server.herokuapp.com/api/weather/almanac/today`;
 
-  //const weatherResult = await fetch(URL).then(data => data.json()).then(result => result);
-  const jbjResult = await fetch(urlJBJ).then(result => result);
 
-  console.log(jbjResult);
-  // jbjResult
-    return [{ data:100, "wx":"unk", "wxmain":"unk", "tempMax":jbjResult.temperature_max, "tempMin":100}, "Waynewood" ];
+  const conditions_data = await fetch(conditions_url).then(resp => resp.json()).then(result => {
+    return result;
+  });
 
-  // const currentTemp = weatherResult.current.temp;
-  // const todayWeather = weatherResult.daily[0];
-  // const weatherMain = todayWeather.weather[0].main;
-  // const tempMax = todayWeather.temp.max;
-  // const tempMin = todayWeather.temp.min;
+  const almanac_data = await fetch(almanac_url).then(resp => resp.json()).then(result => {
+    return result;
+  });
 
-  // return [{ currentTemp, weatherMain, tempMax, tempMin }, "Waynewood"];
+  console.debug("api results",conditions_data, almanac_data);
+  return [{ observation_time: conditions_data.observed_at, currentTemp: conditions_data.temperate_f, weatherMain: "unk", "tempMax": almanac_data.max_temp, "tempMin": almanac_data.min_temp }, "Waynewood"];
 }

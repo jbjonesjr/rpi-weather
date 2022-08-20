@@ -6,7 +6,7 @@ COALESCE(current_rain.obsered_rainfall,0) as "hourly_rain",
 humidity 
 FROM reports 
 left join ( 
-select "time", sum(rain_mm) as "obsered_rainfall" from
+select "time", TRUNC((sum(rain_mm)/25.4)::numeric,2) as "obsered_rainfall" from
 ( select date_trunc('hour', observed_at) as "time", rain_diff_mm as "rain_mm" from reports where sensor_id = 1 and date_trunc('hour', observed_at) = date_trunc('hour', now() at time zone 'America/New_York' at time zone 'utc' ) ) as "hourly rainfall"
 group by time order by time desc
 ) as "current_rain" on 1=1

@@ -20,10 +20,11 @@ const fetch = {
         TRUNC(temperature_f::numeric,2) as "temp_f", 
         wind_kph as "wind", wind_dir_deg as wind_dir, 
         TRUNC(current_rain.obsered_rainfall::numeric,2) as "hourly_rain",
+        COALESCE(TRUNC(current_rain.obsered_rainfall::numeric,2),0) as "hourly_rain",
         humidity 
         FROM reports 
-        join ( 
-        select TRUNC((sum(rain_mm)/25.4)::numeric,2) as "obsered_rainfall" from
+        left join ( 
+        select "time", TRUNC((sum(rain_mm)/25.4)::numeric,2) as "obsered_rainfall" from
         ( select date_trunc('hour', observed_at) as "time", rain_diff_mm as "rain_mm" from reports where sensor_id = 1 and date_trunc('hour', observed_at) = date_trunc('hour', now() at time zone 'America/New_York' at time zone 'utc' ) ) as "hourly rainfall"
         group by time order by time desc
         ) as "current_rain" on 1=1

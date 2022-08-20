@@ -15,6 +15,7 @@
   "type":"module",
   "scripts": {
     "start": "react-scripts start",
+    "start:client": "npm start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

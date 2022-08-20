@@ -84,3 +84,19 @@ max(rain_diff_mm) as "max hourly observed rainfall period",
 sum(rain_diff_mm) as "total rainfall"
 from reports
 where date_trunc('day', observed_at) = date_trunc('day', (now() at time zone 'America/New_York' at time zone 'utc' - INTERVAL '1 day')::date at time zone 'America/New_York' at time zone 'utc' )
+
+
+-- daily temperature extremes
+
+SELECT date_trunc('hour', observed_at at time zone 'America/New_York') as "dtg", max(temperature_f) as "max_temp", min(temperature_f) as "min_temp"  
+FROM ( 
+  SELECT observed_at, temperature_f 
+  FROM reports 
+  WHERE date_trunc('day', observed_at) = date_trunc('day', (now() at time zone 'America/New_York' at time zone 'utc')) 
+  -- WHERE date_trunc('day', observed_at) = make_date($1,$2,$3)
+  AND sensor_id = 2 
+  ORDER BY observed_at asc 
+) as "raw_obs"
+GROUP BY date_trunc('hour', observed_at at time zone 'America/New_York')
+
+                     

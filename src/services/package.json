@@ -11,7 +11,7 @@
     "type": "git",
     "url": "git+https://github.com/jbjonesjr/rpi-weather.git"
   },
-  "type":"module",
+  "type": "module",
   "author": "@jbjonesjr",
   "license": "ISC",
   "bugs": {

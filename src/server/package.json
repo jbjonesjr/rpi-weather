@@ -14,7 +14,7 @@
   },
   "author": "@jbjonesjr",
   "license": "ISC",
-  "type":"module",
+  "type": "module",
   "bugs": {
     "url": "https://github.com/jbjonesjr/rpi-weather/issues"
   },
@@ -22,6 +22,6 @@
   "dependencies": {
     "express": "^4.18.1",
     "pg": "^8.7.3",
-    "services":"file:../services"
+    "services": "file:../services"
   }
 }

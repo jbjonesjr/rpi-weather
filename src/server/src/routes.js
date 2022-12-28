@@ -1,12 +1,22 @@
 import express from 'express';
 import fetchService from '../../services/src/fetchService.js';
+import path from 'path';
 
 let router = express.Router();
+let __dirname = path.resolve();
+
 
 /* Notes:
 https://www.codegrepper.com/code-examples/javascript/import+%7B+Router+%7D+from+%27express%27%3B+const+router+%3D+express.Router%28%29%3B
 
 */
+
+router.use(express.static(path.join(__dirname, '../app/build/')));
+
+router.get(['/app', '/app/', '/app/index.html','/app/bear'], (req, res) => {
+    res.sendFile('index.html', {root: '../app/build/'});
+    console.log(`responded to /app route`);
+});
 
 /*
  API Design:

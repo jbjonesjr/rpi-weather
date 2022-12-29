@@ -112,6 +112,8 @@ prep heroku in codespace (docs: https://devcenter.heroku.com/articles/heroku-cli
 codespace ➜ /workspaces (main ✗) $ `curl https://cli-assets.heroku.com/install.sh | sh`
 Get cli token/login
 codespace ➜ /workspaces (main ✗) $ `heroku login -i`
+codespace ➜ /workspaces (main ✗) $ `git remote add heroku https://git.heroku.com/{}.git`
+
 
 ## Create root application
 codespace ➜ /workspaces/rpi-weather (main ✗) $ `npm init`
@@ -130,11 +132,10 @@ codespace ➜ /workspaces/rpi-weather/src/server (main ✗) $ `heroku create`
 add heroku route to git config
 codespace ➜ /workspaces/rpi-weather/.git (main ✗) $ `vi config`
 
-```
-[remote "heroku"]
-        url = https://git.heroku.com/{}.git
-```
+
 
 codespace ➜ /workspaces/rpi-weather (main ✗) $ `git push heroku main`
 
 codespace ➜ /workspaces/rpi-weather/src/server (main ✗) $ npm install pg
+
+commit my package-lock.json files: https://dev.to/adamklein/package-lock-json-in-git-or-not-50l5

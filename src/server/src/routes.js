@@ -11,7 +11,8 @@ https://www.codegrepper.com/code-examples/javascript/import+%7B+Router+%7D+from+
 
 */
 
-router.use(express.static(path.join(__dirname, '../app/build/')));
+router.use(express.static(path.join(__dirname, '../app/build')));
+router.use('/app/static', express.static(path.join(__dirname, '../app/build/static')));
 
 router.get(['/app', '/app/', '/app/index.html','/app/bear'], (req, res) => {
     res.sendFile('index.html', {root: '../app/build/'});

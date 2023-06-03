@@ -11,6 +11,13 @@
 		"5000": {
 			"label": "express-5000"
 		}
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ckolkman.vscode-postgres"
+			]
+		}
 	}
 
 	// Features to add to the dev container. More info: https://containers.dev/features.

@@ -105,11 +105,10 @@ module.exports = {
       })
       .then((sensor_details) => {
         //console.debug("sensor details: ",sensor_details);
-        if(sensor_details.data_validity == 1){
-       
-        return client.query(`INSERT INTO reports (created_on, observed_at, seq, sensor_id, lowbattery, battery_ok, mic, startup, temperature_f, humidity, wind_kph, wind_dir_deg, rain_first_mm, rain_second_mm, rain_diff_mm) VALUES (to_timestamp(${Date.now()} / 1000), $1, $2, ${sensor_details.pid}, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING *`, [data.dtg, data.seq, data.lowbattery, data.battery_ok, data.mic, data.startup, data.temperatureF, data.humidity, data.wind_kph, data.wind_dir, data.rain1_mm, data.rain2_mm, data.rain_diff_mm]);
+        if(sensor_details.data_validity == 1){       
+          return client.query(`INSERT INTO reports (created_on, observed_at, seq, sensor_id, lowbattery, battery_ok, mic, startup, temperature_f, humidity, wind_kph, wind_dir_deg, rain_first_mm, rain_second_mm, rain_diff_mm) VALUES (to_timestamp(${Date.now()} / 1000), $1, $2, ${sensor_details.pid}, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING *`, [data.dtg, data.seq, data.lowbattery, data.battery_ok, data.mic, data.startup, data.temperatureF, data.humidity, data.wind_kph, data.wind_dir, data.rain1_mm, data.rain2_mm, data.rain_diff_mm]);
         }else{
-          return Promise.reject("sensor data is not valid, skipping insert");
+          return Promise.reject(`sensor ${data.model} (${data.sensorId}) is marked invalid, skipping insert`);
         }
       }).then((res) => {
         console.log('inserted data');

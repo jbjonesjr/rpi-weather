@@ -48,7 +48,7 @@ router.get('/api/weather/almanac/yesterday', (req, res) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
     //set response header to type text/json
-    res.setHeader('Content-Type', 'application/json');
+    res.setHeader('Content-Type', 'text/json');
 
 
     fetchService.fetch_almanac_yesterday()

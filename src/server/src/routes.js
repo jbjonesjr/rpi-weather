@@ -74,12 +74,12 @@ router.get(['/api/weather/almanac/today'], (req, res) => {
         });
 });
 
-router.get(['/api/weather/almanac/extremes/:year/:month/:day'], (req, res) => {
+router.get(['/api/weather/almanac/:year/:month/:day'], (req, res) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
-    fetchService.fetch_temperature_extremes(req.params.year, req.params.month, req.params.day)
+    fetchService.fetch_almanac_query(req.params.year, req.params.month, req.params.day)
         .then(result => {
-            console.log('f(x) temperature extreme alamanac data', result);
+            console.log('f(x) alamanac data', result);
             res.json(result);
         })
         .catch(err => {
@@ -88,10 +88,10 @@ router.get(['/api/weather/almanac/extremes/:year/:month/:day'], (req, res) => {
 });
 
 
-router.get(['/api/weather/almanac/:year/:month/:day'], (req, res) => {
-    fetchService.fetch_almanac_query(req.params.year, req.params.month, req.params.day)
+router.get(['/api/weather/almanac/extremes/:year/:month/:day'], (req, res) => {
+    fetchService.fetch_temperature_extremes(req.params.year, req.params.month, req.params.day)
         .then(result => {
-            console.log('f(x) alamanac data', result);
+            console.log('f(x) temperature extreme alamanac data', result);
             res.json(result);
         })
         .catch(err => {

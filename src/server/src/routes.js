@@ -32,7 +32,8 @@ router.get('/api/test', (req, res) => {
 router.get('/api/weather/current', (req, res) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
-   
+    res.header('Content-Type', 'application/json');
+
     fetchService.fetch_current_conditions()
         .then(result => {
             console.log('f(x) current conditions', result);
@@ -47,9 +48,7 @@ router.get('/api/weather/current', (req, res) => {
 router.get('/api/weather/almanac/yesterday', (req, res) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
-    //set response header to type text/json
-    res.setHeader('Content-Type', 'application/json');
-
+    res.header('Content-Type', 'application/json');
 
     fetchService.fetch_almanac_yesterday()
         .then(result => {
@@ -64,6 +63,8 @@ router.get('/api/weather/almanac/yesterday', (req, res) => {
 router.get(['/api/weather/almanac/today'], (req, res) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    res.header('Content-Type', 'application/json');
+    
     fetchService.fetch_almanac()
         .then(result => {
             console.log('f(x) alamanac data', result);
@@ -77,6 +78,8 @@ router.get(['/api/weather/almanac/today'], (req, res) => {
 router.get(['/api/weather/almanac/:year/:month/:day'], (req, res) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    res.header('Content-Type', 'application/json');
+
     fetchService.fetch_almanac_query(req.params.year, req.params.month, req.params.day)
         .then(result => {
             console.log('f(x) alamanac data', result);
@@ -89,6 +92,10 @@ router.get(['/api/weather/almanac/:year/:month/:day'], (req, res) => {
 
 
 router.get(['/api/weather/almanac/extremes/:year/:month/:day'], (req, res) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    res.header('Content-Type', 'application/json');
+
     fetchService.fetch_temperature_extremes(req.params.year, req.params.month, req.params.day)
         .then(result => {
             console.log('f(x) temperature extreme alamanac data', result);

@@ -128,7 +128,7 @@ const fetch = {
     fetch_almanac_query: (year, month, date) => {
         const almanac_generic_query = `
         select * from vw_daily_almanac
-        where "observed_day_dt" >= date_trunc('day', observed_at ) = make_date($1,$2,$3);
+        where "observed_day_dt" = make_date($1,$2,$3);
         `;
         try {
             console.log(`fetching today's alamanac`);
@@ -148,12 +148,12 @@ const fetch = {
                         total_rainfall: result.rows[0]["total rainfall"]
                     };
                 }).catch(err => {
-                    console.log(`error fetching current conditions`);
+                    console.log(`error querying almanac by date`);
                     console.log(err);
                 });
         }
         catch (err) {
-            console.log(`error fetching current conditions`);
+            console.log(`error fetching almanac by date`);
             console.log(err);
         }
     },

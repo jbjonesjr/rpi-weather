@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -9,11 +9,24 @@ import {
   Legend
 } from "chart.js";
 import { Bar } from 'react-chartjs-2';
+import { getTemperatureExtremes } from '../utils/fetchHelpers';
+
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-const data = {
-  labels: ["Midnight", "3 AM", "6 AM", "9 AM", "Noon", "3 PM", "6 PM", "9 PM"],
+useEffect(() => {
+  console.debug('use effect called');
+  getTemperatureExtremes().then(([data]) => {
+    data.each((item) => {
+      console.debug(item);
+    });
+  });
+}, []);
+
+let data = {
+  // an array of hours in the day
+  
+  labels: ["Midnight", "1","2","3","4","5","6","7","8","9","10","11","Noon", "1","2","3","4","5","6","7","8","9","10","11"],
   datasets: [
     {
       label: 'My Dataset',
@@ -31,12 +44,12 @@ const config = {
     options: {
       responsive: true,
       plugins: {
-        legend: {
-          position: 'top',
-        },
+        // legend: {
+        //   position: 'top',
+        // },
         title: {
-          display: true,
-          text: 'Chart.js Floating Bar Chart'
+          display: false,
+          text: "Today's hourly temperature ranges"
         }
       }
     }

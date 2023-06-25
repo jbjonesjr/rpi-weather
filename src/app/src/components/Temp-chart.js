@@ -1,6 +1,8 @@
 import React from 'react';
 import { Bar } from 'react-chartjs-2';
 
+
+
 const data = {
   labels: ["Midnight", "3 AM", "6 AM", "9 AM", "Noon", "3 PM", "6 PM", "9 PM"],
   datasets: [
@@ -14,20 +16,25 @@ const data = {
   ],
 };
 
-const options = {
-  scales: {
-    yAxes: [
-      {
-        ticks: {
-          beginAtZero: false,
+const config = {
+    type: 'bar',
+    data: data,
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'top',
         },
-      },
-    ],
-  },
-};
-
+        title: {
+          display: true,
+          text: 'Chart.js Floating Bar Chart'
+        }
+      }
+    }
+  };
+  
 const BarChart = () => {
-  return <Bar data={data} options={options} />;
+  return <Bar data={config.data} options={config.options} />;
 };
 
 export default BarChart;

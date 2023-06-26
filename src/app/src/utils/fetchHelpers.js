@@ -1,11 +1,13 @@
 
+const today = new Date();
+const conditions_url = `https://jbjonesjr-weather-server.herokuapp.com/api/weather/current`;
+const almanac_url = `https://jbjonesjr-weather-server.herokuapp.com/api/weather/almanac/today`;
+const t_e_url = `https://jbjonesjr-weather-server.herokuapp.com/api/weather/almanac/extremes/${today.getFullYear()}/${today.getMonth() + 1}/${today.getDate()}`;
+
+
 export const getWeather = async () => {
 
-  console.log('fetching data');
-  const today = new Date();
-  const conditions_url = `https://jbjonesjr-weather-server.herokuapp.com/api/weather/current`;
-  const almanac_url = `https://jbjonesjr-weather-server.herokuapp.com/api/weather/almanac/today`;
-  const t_e_url = `https://jbjonesjr-weather-server.herokuapp.com/api/weather/almanac/extremes/${today.getFullYear()}/${today.getMonth() + 1}/${today.getDate()}`;
+  console.log('fetching weather data');
 
   const conditions_data = await fetch(conditions_url).then(resp => resp.json()).then(result => {
     return result;

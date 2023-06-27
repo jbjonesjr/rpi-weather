@@ -13,49 +13,68 @@ import { getTemperatureExtremes } from '../utils/fetchHelpers';
 
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
-
-useEffect(() => {
-  console.debug('use effect called');
-  getTemperatureExtremes().then(([data]) => {
-    data.each((item) => {
-      console.debug(item);
-    });
-  });
-}, []);
-
-let data = {
-  // an array of hours in the day
-  
-  labels: ["Midnight", "1","2","3","4","5","6","7","8","9","10","11","Noon", "1","2","3","4","5","6","7","8","9","10","11"],
-  datasets: [
-    {
-      label: 'My Dataset',
-      data: [[5,10], [10,20], [19,26], [26,27], [27,29], [27,28], [25,27], [20,25]],
-      backgroundColor: 'rgba(255, 99, 132, 0.2)',
-      borderColor: 'rgba(255, 99, 132, 1)',
-      borderWidth: 1,
-    },
-  ],
-};
-
-const config = {
-    type: 'bar',
-    data: data,
-    options: {
-      responsive: true,
-      plugins: {
-        // legend: {
-        //   position: 'top',
-        // },
-        title: {
-          display: false,
-          text: "Today's hourly temperature ranges"
-        }
-      }
-    }
-  };
   
 const BarChart = () => {
+
+  const [hourlyTempRanges] = useState({
+    data:[],
+    min: 100,
+    max: 0
+    });
+
+  useEffect(() => {
+    console.debug('use effect called');
+    getTemperatureExtremes().then((temp_results) => {
+    //  console.log("data results", temp_results);
+      temp_results.forEach((item) => {
+        console.debug(item, hourlyTempRanges);
+        hourlyTempRanges.min = Math.min(hourlyTempRanges.min, Math.round(item['min_temp']*10)/10);
+        hourlyTempRanges.max = Math.min(hourlyTempRanges.max, Math.round(item['max_temp']*10)/10);
+        hourlyTempRanges.data.push([Math.round(item['min_temp']*10)/10,Math.round(item['max_temp']*10)/10]);
+      });
+
+    });
+  }, [hourlyTempRanges]);
+  
+  let data = {
+    // an array of hours in the day
+    
+    labels: ["Midnight", "1","2","3","4","5","6","7","8","9","10","11","Noon", "1","2","3","4","5","6","7","8","9","10","11"],
+    datasets: [
+      {
+        label: 'Temperature Range',
+        data: hourlyTempRanges.data,
+        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+        borderColor: 'rgba(255, 99, 132, 1)',
+        borderWidth: 1,
+        barPercentage: 0.5
+      },
+    ],
+  };
+  
+  const config = {
+      type: 'bar',
+      data: data,
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            min: hourlyTempRanges.min-10,
+            max: hourlyTempRanges.max+10
+          }
+        },
+        plugins: {
+          // legend: {
+          //   position: 'top',
+          // },
+          title: {
+            display: false,
+            text: "Today's hourly temperature ranges"
+          }
+        }
+      }
+    };
+
   return <Bar data={config.data} options={config.options} />;
 };
 

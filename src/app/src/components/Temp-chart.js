@@ -29,7 +29,7 @@ const BarChart = () => {
       temp_results.forEach((item) => {
         console.debug(item, hourlyTempRanges);
         hourlyTempRanges.min = Math.min(hourlyTempRanges.min, Math.round(item['min_temp']*10)/10);
-        hourlyTempRanges.max = Math.min(hourlyTempRanges.max, Math.round(item['max_temp']*10)/10);
+        hourlyTempRanges.max = Math.max(hourlyTempRanges.max, Math.round(item['max_temp']*10)/10);
         hourlyTempRanges.data.push([Math.round(item['min_temp']*10)/10,Math.round(item['max_temp']*10)/10]);
       });
 
@@ -57,6 +57,19 @@ const BarChart = () => {
       data: data,
       options: {
         responsive: true,
+        layout: {
+          padding: {
+            left: 20,
+            right: 20,
+            top: 10,
+            bottom: 10,
+          },
+        },
+        elements: {
+          bar: {
+            borderSkipped: false,
+          },
+        },
         scales: {
           y: {
             min: hourlyTempRanges.min-10,

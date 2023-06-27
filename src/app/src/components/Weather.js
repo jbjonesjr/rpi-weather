@@ -25,21 +25,22 @@ const Weather = () => {
     const month = months[d.getMonth()];
     const year = d.getFullYear();
 
-    return `${day} ${date} ${month} ${year} (${d.getHours()%12 == 0 ? 12 : d.getHours()%12}:${String(d.getMinutes()).padStart(2,0)} ${d.getHours() >= 12 ? 'PM' : 'AM'})`;
-  }
-
-  async function fetchData() {
-    const response = await getWeather();
-    let dt = new Date(Date.parse(response[0].observation_time));
-    setCurrentDate(dateBuilder(dt));
-    return response;
+    return `${day} ${date} ${month} ${year} (${d.getHours()%12 === 0 ? 12 : d.getHours()%12}:${String(d.getMinutes()).padStart(2,0)} ${d.getHours() >= 12 ? 'PM' : 'AM'})`;
   }
 
   useEffect(() => {
+    async function fetchData() {
+      const response = await getWeather();
+      let dt = new Date(Date.parse(response[0].observation_time));
+      setCurrentDate(dateBuilder(dt));
+      return response;
+    }
+    
     console.debug('use effect called');
     fetchData().then(([newWeather]) => {
       setWeather(newWeather);
     });
+    
   }, []);
 
   const setBackground = () => {

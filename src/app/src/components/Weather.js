@@ -41,7 +41,7 @@ const Weather = () => {
       setWeather(newWeather);
     });
     
-  }, []);
+  }, [setCurrentDate]);
 
   const setBackground = () => {
     const now = new Date();
@@ -57,7 +57,7 @@ const Weather = () => {
 
   return (
     <StyledWeather bgImage={setBackground()}>
-      <Wrapper states={{ currentDate, weather }} />
+      <Wrapper states={{ weather }} />
     </StyledWeather>
   );
 }

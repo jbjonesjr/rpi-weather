@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "working on turning a raspberry pi into an always on, internet connected weather station",
   "main": "index.js",
+  "engines": {
+    "node": "18.x"
+  },
   "scripts": {
     "install": "npm run install:services && npm run install:client && npm run install:server",
     "install:client": "(cd ./src/app && npm install && npm run build)",
@@ -12,7 +15,7 @@
     "start:prod": "(cd ./src/server && node index.js)",
     "start:dev": "npm run start:client & npm run start:server",
     "start:client": "(cd ./src/app && npm start)",
-    "start:server": "(cd ./src/server && npm run start:watch)",
+    "start:server:local": "(cd ./src/server && npm run startlocal)",
     "test": "node ./src/rtl-publish/tests/tests.js"
   },
   "repository": {

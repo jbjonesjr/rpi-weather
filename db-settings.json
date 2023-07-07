@@ -1,0 +1,18 @@
+{
+    "label": "wx-azure-prod",
+    "host": "jbjonesjr-db-prod-wx.postgres.database.azure.com",
+    "user": "admin_wx",
+    "port": 5432,
+    "ssl": true,
+    "database": "",
+    "password": ""
+  }
+  {
+    "label": "weather-db-prod",
+    "host": "ec2-54-87-179-4.compute-1.amazonaws.com",
+    "user": "rlfhnmihzaubjd",
+    "port": 5432,
+    "ssl": true,
+    "database": "ddpspqitlib728",
+    "password": ""
+  }

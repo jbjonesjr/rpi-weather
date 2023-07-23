@@ -25,7 +25,7 @@ const rtl_process = {
     }
   },
   process_input: function (line, mode = 'weather') {
-    datas = {};
+    let datas = {};
     datas = line.split(",");
     if (datas.length == 16 && mode == 'weather') { //Data Length varies, based on RTL-433 formats/parameters passed in
       // this is only good for weather formats (-R 166 and -R 175 are the key for me)

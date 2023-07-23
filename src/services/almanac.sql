@@ -1,9 +1,26 @@
 -- all yesterday's reports
 select date_trunc('day', observed_at::date), date_trunc('day', (now() - INTERVAL '1 day')::date), * 
 from reports 
-where date_trunc('day', observed_at::date) = date_trunc('day', (now() - INTERVAL '1 day')::date);
+where date_trunc('day', observed_at::date) = date_trunc('day', (now() - INTERVAL '1 day')::date) ;
 
 
+select date_trunc('day', observed_at::date), date_trunc('day', (now() - INTERVAL '2 day')::date), * 
+from reports 
+where date_trunc('day', observed_at::date) = date_trunc('day', (now() - INTERVAL '2 day')::date) and sensor_id = 1;
+
+select date_trunc('day', observed_at::date), date_trunc('day', (now())::date), * 
+from reports 
+where date_trunc('day', observed_at::date) = date_trunc('day', (now())::date) and rain_diff_mm > 0;
+
+
+ select * from vw_daily_almanac
+        where "observed_day_dt"  = make_date(2023,06,11);
+        
+
+select * from reports limit 1;
+
+select date_trunc('hour', observed_at) as "time", rain_diff_mm as "rain_mm" from reports where sensor_id = 1 and date_trunc('day', observed_at::date) = date_trunc('day', (now() - INTERVAL '1 day')::date) and rain_diff_mm > 0
+        group by time order by time desc
 
 
 -- all yesterday's reports

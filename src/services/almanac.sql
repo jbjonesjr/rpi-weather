@@ -8,6 +8,7 @@ select date_trunc('day', observed_at::date), date_trunc('day', (now() - INTERVAL
 from reports 
 where date_trunc('day', observed_at::date) = date_trunc('day', (now() - INTERVAL '2 day')::date) and sensor_id = 1;
 
+-- Today's reports with rain
 select date_trunc('day', observed_at::date), date_trunc('day', (now())::date), * 
 from reports 
 where date_trunc('day', observed_at::date) = date_trunc('day', (now())::date) and rain_diff_mm > 0;
@@ -17,7 +18,7 @@ where date_trunc('day', observed_at::date) = date_trunc('day', (now())::date) an
         where "observed_day_dt"  = make_date(2023,06,11);
         
 
-select * from reports limit 1;
+select * from reports order by created_on desc limit 1;
 
 select date_trunc('hour', observed_at) as "time", rain_diff_mm as "rain_mm" from reports where sensor_id = 1 and date_trunc('day', observed_at::date) = date_trunc('day', (now() - INTERVAL '1 day')::date) and rain_diff_mm > 0
         group by time order by time desc

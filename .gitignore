@@ -5,3 +5,4 @@ npm-debug.log
 .DS_Store
 src/app/build/*
 package-lock.json
+yarn.lock

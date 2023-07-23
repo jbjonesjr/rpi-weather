@@ -30,8 +30,11 @@ const rtl_process = {
     if (datas.length == 16 && mode == 'weather') { //Data Length varies, based on RTL-433 formats/parameters passed in
       // this is only good for weather formats (-R 166 and -R 175 are the key for me)
       // But I should probably look for new devices as well....
+      // Lacrosse format
       // time, msg, codes, model, id, seq, flags, temp_c, humidity, wind_avg_kmh, wind_dir, mic, battery_ok, startup, rain_mm, rain_mm2
       // mic is message integrity code
+
+      // TODO: Actually do something with the battery_ok flag
 
       let result = {
         "dtg": new Date(datas[0]),
@@ -54,7 +57,7 @@ const rtl_process = {
       };
       console.debug('data:', result);
       /*
-   The sensor generates a packet every 'n' seconds but only transmits if one or
+   The Breezepro sensor generates a packet every 'n' seconds but only transmits if one or
    more of the following conditions are satisfied:
    - temp changes +/- 0.8 degrees C
    - humidity changes +/- 1%
@@ -78,7 +81,8 @@ const rtl_process = {
   persist_data: function (data) {
     //connect to a heroku pgsql database using an env variable
     process.env.NODE_TLS_REJECT_UNAUTHORIZED=0
-      console.log("Connecting to database...",process.env.DATABASE_URL);
+      console.log("Connecting to database by env URL ... XXX",);
+      console.debug("Connecting to database by env URL ... ",process.env.DATABASE_URL);
     const client = new Client({
       connectionString: process.env.DATABASE_URL,
       ssl: true
@@ -124,6 +128,7 @@ const rtl_process = {
     }
     catch(err){
       console.log(err);
+      console.error("Failed to insert into database with env URL ... ",process.env.DATABASE_URL);
     }
     
     

@@ -3,7 +3,7 @@ const { chunksToLinesAsync, chomp } = require('@rauschma/stringio');
 require('dotenv').config();
 
 
-module.exports = {
+const rtl_process = {
   last: null,
   init: true,
   echoReadable: async function (readable) {
@@ -131,3 +131,5 @@ module.exports = {
     return result;
   }
 }
+
+export default rtl_process;

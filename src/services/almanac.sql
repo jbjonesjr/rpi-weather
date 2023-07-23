@@ -5,6 +5,11 @@ where date_trunc('day', observed_at::date) = date_trunc('day', (now() - INTERVAL
 
 
 
+
+-- all yesterday's reports
+select * from vw_daily_almanac where "observed_day_dt" = date_trunc('day', (now() at time zone 'America/New_York' at time zone 'utc' - INTERVAL '1 day')::date);
+
+
 -- hourly almanac data from all time
 select count(observed_at) as "observations",
 max(TO_CHAR(observed_at::date, 'yyyy-mm-dd HH24:00')) "observed day",

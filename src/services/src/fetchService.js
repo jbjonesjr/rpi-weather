@@ -126,8 +126,12 @@ const fetch = {
         }
     },
     fetch_almanac_query: (year, month, date) => {
+        console.log(Intl.DateTimeFormat().resolvedOptions().timeZone);
         console.log(`${new Date()} (${(new Date()).toISOString()})`, "fetching almanac for", year, month, date);
-        
+        console.log(`${new Date()} (${(new Date()).toLocaleString('en-US', {timeZone: 'America/New_York'})})`, "fetching almanac for", year, month, date);
+        console.log(Intl.DateTimeFormat().resolvedOptions().timeZone);
+    
+
         const almanac_generic_query = `
         select * from vw_daily_almanac
         where "observed_day_dt" = make_date($1,$2,$3);

@@ -33,7 +33,7 @@ const rtl_process = {
       // time, msg, codes, model, id, seq, flags, temp_c, humidity, wind_avg_kmh, wind_dir, mic, battery_ok, startup, rain_mm, rain_mm2
       // mic is message integrity code
 
-      result = {
+      let result = {
         "dtg": new Date(datas[0]),
         "model": datas[3],
         "sensorId": parseInt(datas[4]),

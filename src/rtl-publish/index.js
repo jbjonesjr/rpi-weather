@@ -1,5 +1,5 @@
-let spawn = require('child_process').spawn;
-let rtl_process = require('./src/rtl_process')
+import { spawn } from 'child_process';
+import rtl_process from './src/rtl_process.js';
 
 const mode = 'weather';
 const weatherModels = ["-R", "166", "-R", "175"];

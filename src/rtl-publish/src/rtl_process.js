@@ -85,7 +85,7 @@ const rtl_process = {
     });
     try{
       // pg insert with promises
-      client.connect()
+      return client.connect()
       .then(() => {
         console.log(`connected to database, parsing sensor ${data.model} (${data.sensorId})`);
         //get sensor id from database for the sensor id in the data
@@ -129,9 +129,8 @@ const rtl_process = {
     
     //     let res = client.query('select * from reports where sensor_id = ${data.sensorId} and dtg = ${data.dtg};');
 
-    // let res = client.query('select * from reports;');
-    return result;
-  }
+    // let res = client.query('select * from reports;');  }
+}
 }
 
 export default rtl_process;

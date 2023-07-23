@@ -1,5 +1,6 @@
-import { Client } from 'pg';
+import pg from 'pg';
 import { chunksToLinesAsync, chomp } from '@rauschma/stringio';
+const { Client } = pg;
 import dotenv from 'dotenv';
 dotenv.config();
 

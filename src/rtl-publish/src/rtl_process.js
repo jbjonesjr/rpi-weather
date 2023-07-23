@@ -1,6 +1,7 @@
-const { Client } = require('pg');
-const { chunksToLinesAsync, chomp } = require('@rauschma/stringio');
-require('dotenv').config();
+import { Client } from 'pg';
+import { chunksToLinesAsync, chomp } from '@rauschma/stringio';
+import dotenv from 'dotenv';
+dotenv.config();
 
 
 const rtl_process = {

@@ -4,3 +4,4 @@ node_modules/
 npm-debug.log
 .DS_Store
 src/app/build/*
+package-lock.json

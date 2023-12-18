@@ -8,8 +8,12 @@ pasword: flagstone 2x
 
 Heroku account: personal
 
+To kick off the rasb-pi service
+```
+cd src/rtl-publish/
+npm run-script run-local
+```
 
-`npm run-script run:local`
 
 `npm run-script test`
 

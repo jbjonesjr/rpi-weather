@@ -2,8 +2,11 @@
 Turning a raspberry pi into an always on, internet connected weather station
 
 - `rtl-publish` runs on the raspberry pi, wraps the data receiver, processes the data, and stores it in a Heroku postgres database
+  - `npm run-script run-local` in the src/rtl-publish directory 
 - `server` runs via heroku, and is a web service endpoint to serve up the data to various clients.
+  - `npm run start:prod`
 - `app` runs on heroku, and is a web/html interface to the data.
+  - `npm run start:client`
 - `services` is a shared services layer used by other packages
 
 ## Key Heroku desgin components

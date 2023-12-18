@@ -17,5 +17,17 @@ Heroku account: personal
 update the rtl_443 tool:
 https://github.com/merbanan/rtl_433/blob/master/docs/BUILDING.md#cmake
 
+apt-get install libssl-dev
+cd src/merbanan/rtl_433/build
+cmake ..
+make
+make install
+
 
 Work to improve the rainguage management: https://github.com/merbanan/rtl_433/issues/1758
+
+update the pi
+sudo apt-get update
+sudo apt-get upgrade
+
+sudo apt-get distr-upgrade

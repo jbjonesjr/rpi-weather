@@ -2,8 +2,9 @@ import { spawn } from 'child_process';
 import rtl_process from './src/rtl_process.js';
 
 const mode = 'weather';
-const weatherModels = ["-R", "166", "-R", "175"];
-const allModels = [];
+const weatherModels = ["-R", "166", "-R", "175", "-R", "142"];
+// Fine offset moisture sensor `-R 142`
+const debug = [];
 
 var options = {
   stdio: ["ignore", "pipe", process.stderr]
@@ -14,7 +15,7 @@ if (mode == 'weather') {
   var child = spawn("rtl_433", ["-f", "915M", "-F", "csv"].concat(allModels), options);
 }
 
-rtl_process.echoReadable(child.stdout);
+rtl_process.echoReadable(child.stdout, mode);
 
 /*
 

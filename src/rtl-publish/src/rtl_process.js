@@ -8,11 +8,11 @@ dotenv.config();
 const rtl_process = {
   last: null,
   init: true,
-  echoReadable: async function (readable) {
+  echoReadable: async function (readable, mode) {
     for await (const line of chunksToLinesAsync(readable)) {    
       console.log('RAW DATA: ' + chomp(line))
       if(this.detect_headers(line)) continue;
-      this.process_input(line);
+      this.process_input(line, mode);
     }
   },
   detect_headers: function(line, mode = 'weather') {

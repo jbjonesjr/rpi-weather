@@ -74,7 +74,24 @@ const rtl_process = {
       //} else {
         //console.log(`SKIPPING: persistence last dtg: ${this.last.dtg}`);
       //}
-    } else {
+    } else if(datas[3].contains("Fineoffset") && datas.length == 8 ) { 
+       /*
+      WH51 fineoffset format
+        dtg, model, id, battery_ok, moisture,	battery_mV,	boost, ad_raw
+        */
+      let result = {
+        "dtg": new Date(datas[0]), // this is the time
+        "sensorId": parseInt(datas[2]), // this is the sensor id
+        "battery_ok": parseInt(datas[3]) || null, // 0 = low, 1 = ok
+        "moisture": parseInt(datas[4]) || null,
+        "battery_mV": parseInt(datas[5]) || null, 
+        "boost": parseInt(datas[6]) || null, // 0 = off, 1 = on
+        "ad_raw": parseInt(datas[7]) || null
+      };
+      console.debug('data:', result);
+      this.last = this.persist_data(result);
+    }
+  else{
       console.debug(`data: No parsing criteria met. mode: ${mode}, data size: ${datas.length}`);
     }
   },
@@ -111,9 +128,15 @@ const rtl_process = {
       })
       .then((sensor_details) => {
         //console.debug("sensor details: ",sensor_details);
-        if(sensor_details.data_validity == 1){       
-          return client.query(`INSERT INTO reports (created_on, observed_at, seq, sensor_id, lowbattery, battery_ok, mic, startup, temperature_f, humidity, wind_kph, wind_dir_deg, rain_first_mm, rain_second_mm, rain_diff_mm) VALUES (to_timestamp(${Date.now()} / 1000), $1, $2, ${sensor_details.pid}, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING *`, [data.dtg, data.seq, data.lowbattery, data.battery_ok, data.mic, data.startup, data.temperatureF, data.humidity, data.wind_kph, data.wind_dir, data.rain1_mm, data.rain2_mm, data.rain_diff_mm]);
-        }else{
+        if (sensor_details.data_validity == 1) {
+          if (sensor_details.data.type == "weather") {
+            return client.query(`INSERT INTO reports (created_on, observed_at, seq, sensor_id, lowbattery, battery_ok, mic, startup, temperature_f, humidity, wind_kph, wind_dir_deg, rain_first_mm, rain_second_mm, rain_diff_mm) VALUES (to_timestamp(${Date.now()} / 1000), $1, $2, ${sensor_details.pid}, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING *`, [data.dtg, data.seq, data.lowbattery, data.battery_ok, data.mic, data.startup, data.temperatureF, data.humidity, data.wind_kph, data.wind_dir, data.rain1_mm, data.rain2_mm, data.rain_diff_mm]);
+          } else if (sensor_details.data.type == "moisture") {
+            return client.query(`INSERT INTO moisture_report (created_on, observed_at, sensor_id, battery_ok, moisture, battery_mv, boost, ad_raw) VALUES (to_timestamp(${Date.now()} / 1000), $1, ${sensor_details.pid}, $2, $3, $4, $5, $6) RETURNING *`, [data.dtg, data.battery_ok, data.moisture, data.battery_mV, data.boost, data.ad_raw]);
+          } else {
+            return Promise.reject(`sensor ${data.model} (${data.sensorId}) is invalid type (${data.type}), skipping insert`);
+          }
+        } else {
           return Promise.reject(`sensor ${data.model} (${data.sensorId}) is marked invalid, skipping insert`);
         }
       }).then((res) => {

@@ -85,3 +85,18 @@ CREATE TABLE sensors
     precipitation boolean NOT NULL,
     sensor_name character varying(20) NOT NULL
 );
+
+
+DROP TABLE moisture_report;
+create table moisture_report
+(
+    pid serial,
+    created_on timestamp without time zone NOT NULL,
+    observed_at timestamp without time zone NOT NULL,
+    sensor_id integer NOT NULL,
+    battery_ok integer NULL,
+    moisture integer NULL,
+    battery_mV integer NULL,
+    boost integer NULL,
+    ad_raw integer NULL
+);

@@ -6,7 +6,7 @@ import TemperatureExtremes from './Temp-chart.js';
 import StyledWrapper from './styles/StyledWrapper';
 import StyledGeolocation from './styles/StyledGeolocation';
 
-const Wrapper = ({ handleInput, handleSubmit, states, currentDate }) => (
+const Wrapper = ({ handleInput, handleSubmit, states }) => (
   <StyledWrapper>
     <StyledGeolocation>
         <h1> Waynewood </h1>

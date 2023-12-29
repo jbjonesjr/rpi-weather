@@ -36,7 +36,7 @@ const BarChart = () => {
     });
   }, [hourlyTempRanges]);
   
-  let data = {
+  let temp_range_data = {
     // an array of hours in the day
     
     labels: ["Midnight", "1","2","3","4","5","6","7","8","9","10","11","Noon", "1","2","3","4","5","6","7","8","9","10","11"],
@@ -47,16 +47,17 @@ const BarChart = () => {
         backgroundColor: 'rgba(255, 99, 132, 0.2)',
         borderColor: 'rgba(255, 99, 132, 1)',
         borderWidth: 1,
-        barPercentage: 0.3
+        barPercentage: 0.8
       },
     ],
   };
   
   const config = {
       type: 'bar',
-      data: data,
+      data: temp_range_data,
       options: {
         responsive: true,
+        maxWidth: 640,
         layout: {
           padding: {
             left: 20,

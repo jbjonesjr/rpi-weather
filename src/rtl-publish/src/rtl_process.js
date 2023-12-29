@@ -26,7 +26,7 @@ const rtl_process = {
   process_input: function (line, mode = 'weather') {
     let datas = {};
     datas = line.split(",");
-    if (datas.length == 16 && mode == 'weather') { //Data Length varies, based on RTL-433 formats/parameters passed in
+    if(datas[3].contains("Lacrosse") && datas.length == 16 ) { //Data Length varies, based on RTL-433 formats/parameters passed in
       // this is only good for weather formats (-R 166 and -R 175 are the key for me)
       // But I should probably look for new devices as well....
       // Lacrosse format
@@ -54,6 +54,7 @@ const rtl_process = {
         "rain_diff_mm": (parseFloat(datas[14]) || 0.0 ) - (parseFloat(datas[15]) || 0.0),
         "rain_diff_in": ((parseFloat(datas[14]) || 0.0 ) - (parseFloat(datas[15]) || 0.0))/25.4
       };
+
       console.debug('data:', result);
       /*
    The Breezepro sensor generates a packet every 'n' seconds but only transmits if one or

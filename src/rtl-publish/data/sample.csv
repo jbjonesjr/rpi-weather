@@ -1,0 +1,7 @@
+time,model,id,channel,battery_ok,temperature_C,mic,humidity,rain_mm,wind_dir_deg,wind_avg_km_h,seq,flags,moisture,battery_mV,boost,ad_raw,physical_tamper,ert_type,encoder_tamper,consumption_data,ProtocolID,EndpointType,EndpointID,Consumption,Tamper,PacketCRC,MeterType,rain2_mm
+2023-12-28 21:55:36,Fineoffset-WH51,0dd07d,,1,,CRC,,,,,,,15,1600,0,128,,,,,,,,,,,,
+2023-12-28 21:56:15,LaCrosse-BreezePro,715591,,,8.8,CRC,99,,205,0,6,0,,,,,,,,,,,,,,,,
+2023-12-28 21:56:15,LaCrosse-R3,715591,,1,,CRC,,690072.75,,,6,,,,,,,,,,,,,,,,,2785331.25
+2023-12-28 22:22:37,LaCrosse-R3,7346032,,1,,CRC,,538.5,,,1,,,,,,,,,,,,,,,,,538.5
+2023-12-28 23:28:15,ERT-SCM,36749667,,,,CRC,,,,,,,,,,,0,4,3,23654,,,,,,,,
+2023-12-28 23:27:12,SCMplus,98787782,,,,CRC,,,,,,,,,,,,,,,0x1E,0x9C,98787782,189556,0x0808,0xC097,Gas,

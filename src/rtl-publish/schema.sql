@@ -79,8 +79,9 @@ CREATE TABLE sensors
     pid serial,
     created_on timestamp without time zone NOT NULL,
     sensor_id character varying(7) NOT NULL,
-    sensor_type character varying(20) NOT NULL,
+    sensor_type character varying(20) NOT NULL, -- weather or moisture
     data_validity integer NOT NULL,
     wx_conditions boolean NOT NULL,
-    precipitation boolean NOT NULL
+    precipitation boolean NOT NULL,
+    sensor_name character varying(20) NOT NULL
 );

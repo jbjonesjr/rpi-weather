@@ -17,6 +17,7 @@ const rtl_process = {
   },
   detect_headers: function(line, mode = 'weather') {
     let orig_init = this.init;
+    // the system prints out the headers in a line inititally that we want to ignore.
     if(line.startsWith("time,") && mode == 'weather') {
       this.init = false;
       return orig_init;

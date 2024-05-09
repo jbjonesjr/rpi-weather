@@ -4,10 +4,14 @@ const { Client } = pg;
 import dotenv from 'dotenv';
 dotenv.config();
 
-
+// Refactor to allow injection of database client for easier testing with mocks
 const rtl_process = {
   last: null,
   init: true,
+  client: null, // Added to allow injection of a mock or real database client
+  setClient: function(client) { // Method to inject a database client
+    this.client = client;
+  },
   echoReadable: async function (readable, mode) {
     for await (const line of chunksToLinesAsync(readable)) {    
       console.log('RAW DATA: ' + chomp(line))
@@ -100,7 +104,8 @@ const rtl_process = {
     process.env.NODE_TLS_REJECT_UNAUTHORIZED=0
       console.log("Connecting to database by env URL ... XXX",);
       console.debug("Connecting to database by env URL ... ",process.env.DATABASE_URL);
-    const client = new Client({
+    // Modify database interaction logic to use the injected client if provided, otherwise default to the real client
+    const client = this.client || new Client({
       connectionString: process.env.DATABASE_URL,
       ssl: true
     });
@@ -141,11 +146,11 @@ const rtl_process = {
         }
       }).then((res) => {
         console.log('inserted data');
-        client.end();
+        if (!this.client) client.end(); // Only close the client if it was not injected
       }
       ).catch(err => {
         console.log(err);
-        client.end();
+        if (!this.client) client.end(); // Only close the client if it was not injected
       }
       );
     }

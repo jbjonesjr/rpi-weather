@@ -57,7 +57,7 @@ const BarChart = () => {
       data: temp_range_data,
       options: {
         responsive: true,
-        maxWidth: 640,
+        maxWidth: 600, // Updated maxWidth to 600 as per plan
         layout: {
           padding: {
             left: 20,

@@ -1,5 +1,5 @@
 // Mocks for database interactions in rtl_process.js
-const dbMocks = {
+export const dbMocks = {
   // Mock for client.connect
   connect: jest.fn().mockResolvedValue(),
 
@@ -31,5 +31,3 @@ const dbMocks = {
     client: require('../tests/db_mocks').dbMocks
   }));
 */
-
-module.exports = dbMocks;

@@ -1,3 +1,6 @@
+// Importing jest for mocking functions
+import jest from 'jest-mock';
+
 // Mocks for database interactions in rtl_process.js
 export const dbMocks = {
   // Mock for client.connect

@@ -1,7 +1,7 @@
 // Importing necessary modules
 import LineByLineReader from 'line-by-line';
 import rtl_process from "../src/rtl_process.js";
-import dbMocks from "./db_mocks.js"; // Importing the database mocks
+import { dbMocks } from "./db_mocks.js"; // Importing the database mocks
 
 console.log(__dirname);
 const lr = new LineByLineReader(__dirname+'/../data/raw.input');
@@ -14,8 +14,9 @@ lr.on('error', function (err) {
     // pause emitting of lines...
     lr.pause();
    
-    // Using the mocked process_input function for testing
-    dbMocks.process_input(line);
+    // Injecting dbMocks as the database client when testing rtl_process functions
+    rtl_process.setClient(dbMocks);
+    rtl_process.process_input(line);
 
     setTimeout(function () {
   

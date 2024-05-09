@@ -139,3 +139,18 @@ codespace ➜ /workspaces/rpi-weather (main ✗) $ `git push heroku main`
 codespace ➜ /workspaces/rpi-weather/src/server (main ✗) $ npm install pg
 
 commit my package-lock.json files: https://dev.to/adamklein/package-lock-json-in-git-or-not-50l5
+
+# Operational details
+## Updating the server
+sudo apt-get update
+sudo apt-get install
+
+cd git/merbanan/rtl_433
+git pull
+cd build
+sudo make install
+
+## Run the server
+
+cd git/jbjonesjr/rpi-weather/src/rtl-publish/
+npm run-script run-local

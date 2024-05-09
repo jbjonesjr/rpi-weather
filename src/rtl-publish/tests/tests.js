@@ -1,6 +1,7 @@
-
+// Importing necessary modules
 var LineByLineReader = require('line-by-line');
 let rtl_process = require("../src/rtl_process.js");
+let db_mocks = require("./db_mocks.js"); // Importing the database mocks
 
 console.log(__dirname);
 lr = new LineByLineReader(__dirname+'/../data/raw.input');
@@ -13,7 +14,8 @@ lr.on('error', function (err) {
     // pause emitting of lines...
     lr.pause();
    
-    rtl_process.process_input(line);
+    // Using the mocked process_input function for testing
+    db_mocks.process_input(line);
 
     setTimeout(function () {
   

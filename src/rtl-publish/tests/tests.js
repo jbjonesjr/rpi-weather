@@ -1,7 +1,7 @@
 // Importing necessary modules
 import LineByLineReader from 'line-by-line';
 import rtl_process from "../src/rtl_process.js";
-import dbMocks from "./db_mocks.js"; // Importing the database mocks
+import { dbMocks } from "./db_mocks.js"; // Importing the database mocks
 
 console.log(__dirname);
 const lr = new LineByLineReader(__dirname+'/../data/raw.input');

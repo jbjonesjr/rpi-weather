@@ -14,8 +14,9 @@ lr.on('error', function (err) {
     // pause emitting of lines...
     lr.pause();
    
-    // Using the mocked process_input function for testing
-    dbMocks.process_input(line);
+    // Injecting dbMocks as the database client when testing rtl_process functions
+    rtl_process.setClient(dbMocks);
+    rtl_process.process_input(line);
 
     setTimeout(function () {
   

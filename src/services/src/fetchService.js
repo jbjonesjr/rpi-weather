@@ -33,7 +33,7 @@ const fetch = {
           FROM reports AS reports_temp 
           WHERE reports.sensor_id = reports_temp.sensor_id 
           AND reports.observed_at < reports_temp.observed_at) 
-        and sensor_id = '2'
+        and sensor_id = '16'
         `;
 
         // perform pg query and return the results in a promise
@@ -170,7 +170,7 @@ const fetch = {
                 SELECT observed_at, temperature_f 
                 FROM reports 
                 WHERE date_trunc('day', observed_at) = make_date($1,$2,$3)
-                AND sensor_id = 2 
+                AND sensor_id = 16 
             ) AS "raw_obs"
             GROUP BY date_trunc('hour', observed_at at time zone 'America/New_York')
         `;

@@ -116,13 +116,13 @@ const rtl_process = {
         console.log(`connected to database, parsing sensor ${data.model} (${data.sensorId})`);
         //get sensor id from database for the sensor id in the data
 
-        return client.query(`SELECT * FROM sensors WHERE sensor_id = ${data.sensorId}::character varying and sensor_type = '${data.model}'`);
+        return client.query(`SELECT * FROM sensors WHERE sensor_id = ${data.sensorId}::character varying and sensor_name = '${data.model}'`);
       })
       .then((sensor_res) => {
         if(sensor_res.rowCount == 0 ){
           console.log(`No sensor found for sensor id ${data.sensorId}`);
           console.log(`Inserting sensor ${data.model} (${data.sensorId})`);
-          return client.query(`INSERT INTO sensors (created_on, sensor_id, sensor_type, data_validity) VALUES (to_timestamp(${Date.now()} / 1000), '${data.sensorId}', '${data.model}', 1) RETURNING *`);
+          return client.query(`INSERT INTO sensors (created_on, sensor_id, sensor_type, data_validity, sensor_name) VALUES (to_timestamp(${Date.now()} / 1000), '${data.sensorId}', 'weather', 1, '${data.model}') RETURNING *`);
         }else{
           console.log(`Found sensor ${data.model} (${data.sensorId}). pid: ${sensor_res.rows[0].pid}`);
           return sensor_res;

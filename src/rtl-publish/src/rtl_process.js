@@ -30,7 +30,7 @@ const rtl_process = {
   process_input: function (line, mode = 'weather') {
     let datas = {};
     datas = line.split(",");
-    if(datas[3].contains("Lacrosse") && datas.length == 16 ) { //Data Length varies, based on RTL-433 formats/parameters passed in
+    if(datas[3].includes("Lacrosse") && datas.length == 16 ) { //Data Length varies, based on RTL-433 formats/parameters passed in
       // this is only good for weather formats (-R 166 and -R 175 are the key for me)
       // But I should probably look for new devices as well....
       // Lacrosse format

@@ -94,7 +94,7 @@ create table moisture_report
     created_on timestamp without time zone NOT NULL,
     observed_at timestamp without time zone NOT NULL,
     sensor_id integer NOT NULL,
-    battery_ok integer NULL,
+    battery_ok numeric NULL,
     moisture integer NULL,
     battery_mV integer NULL,
     boost integer NULL,

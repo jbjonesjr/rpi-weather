@@ -38,5 +38,15 @@
     "rain1": 727056.5,
     "rain2": 9266.25,
     "rain_diff":-55505
+  },
+  {
+    "dtg": "2024-05-28T04:47:30.000Z",
+    "model": "Fineoffset-WH51",
+    "sensorId": "0dd07d",
+    "battery_ok": 0.889,
+    "moisture": 28,
+    "battery_mV": 1500,
+    "boost": null,
+    "ad_raw": 179
   }
   ]

@@ -54,8 +54,8 @@ const fetch = {
                     temperature_f: result.rows[0].temp_f,
                     humidity_perc: result.rows[0].humidity,
                     wind_dir: result.rows[0].wind_dir,
-                    wind_kph: result.rows[0].wind,
-                    rainfall_rate_in: result.rows[0].rain_rate
+                    wind_speed_mph: result.rows[0].wind != null ? parseFloat((result.rows[0].wind / 1.60934).toFixed(2)) : null,
+                    rainfall_rate_in: result.rows[0].hourly_rain
                 };
             }).catch(err => {
                 console.log(`error fetching current conditions`);

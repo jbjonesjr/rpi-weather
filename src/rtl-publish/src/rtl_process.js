@@ -1,8 +1,21 @@
 import pg from 'pg';
 import { chunksToLinesAsync, chomp } from '@rauschma/stringio';
-const { Client } = pg;
+const { Pool } = pg;
 import dotenv from 'dotenv';
 dotenv.config();
+
+if (!process.env.DATABASE_URL) {
+  console.error('DATABASE_URL environment variable is required');
+  process.exit(1);
+}
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false }
+});
+
+const toFloat = (s) => { const v = parseFloat(s); return isNaN(v) ? null : v; };
+const toInt = (s) => { const v = parseInt(s, 10); return isNaN(v) ? null : v; };
 
 // Refactor to allow injection of database client for easier testing with mocks
 const rtl_process = {
@@ -39,24 +52,25 @@ const rtl_process = {
 
       // TODO: Actually do something with the battery_ok flag
 
+      const tempC = toFloat(datas[7]);
       let result = {
         "dtg": new Date(datas[0]),
         "model": datas[3],
-        "sensorId": parseInt(datas[4]),
-        "seq": parseInt(datas[5]),
-        "lowbattery": parseInt(datas[6]) || null,
-        "battery_ok": parseInt(datas[12]) || null,
+        "sensorId": toInt(datas[4]),
+        "seq": toInt(datas[5]),
+        "lowbattery": toInt(datas[6]),
+        "battery_ok": toInt(datas[12]),
         "mic": datas[11],  
-        "startup": parseInt(datas[13]) || null,
-        "temperatureC": parseFloat(datas[7]) || null,
-        "temperatureF": (parseFloat(datas[7])*(9/5)) + 32 || null,
-        "humidity": parseInt(datas[8]) || null,
-        "wind_kph": parseFloat(datas[9]) || null,
-        "wind_dir": parseInt(datas[10]) || null,
-        "rain1_mm": parseFloat(datas[14]) || null,
-        "rain2_mm": parseFloat(datas[15]) || null,
-        "rain_diff_mm": (parseFloat(datas[14]) || 0.0 ) - (parseFloat(datas[15]) || 0.0),
-        "rain_diff_in": ((parseFloat(datas[14]) || 0.0 ) - (parseFloat(datas[15]) || 0.0))/25.4
+        "startup": toInt(datas[13]),
+        "temperatureC": tempC,
+        "temperatureF": tempC !== null ? (tempC * (9/5)) + 32 : null,
+        "humidity": toInt(datas[8]),
+        "wind_kph": toFloat(datas[9]),
+        "wind_dir": toInt(datas[10]),
+        "rain1_mm": toFloat(datas[14]),
+        "rain2_mm": toFloat(datas[15]),
+        "rain_diff_mm": (toFloat(datas[14]) ?? 0.0) - (toFloat(datas[15]) ?? 0.0),
+        "rain_diff_in": ((toFloat(datas[14]) ?? 0.0) - (toFloat(datas[15]) ?? 0.0)) / 25.4
       };
 
       console.debug('data:', result);
@@ -90,11 +104,11 @@ const rtl_process = {
         "dtg": new Date(datas[0]), // this is the time
         "model": datas[3], // this is the sensor name
         "sensorId": datas[4], // this is the sensor id
-        "battery_ok": parseFloat(datas[12]) || null, // 0 = low, 1 = ok
-        "moisture": parseInt(datas[17]) || null,
-        "battery_mV": parseInt(datas[16]) || null, 
-        "boost": parseInt(datas[18]) || null, // 0 = off, 1 = on
-        "ad_raw": parseInt(datas[19]) || null
+        "battery_ok": toFloat(datas[12]), // 0 = low, 1 = ok
+        "moisture": toInt(datas[17]),
+        "battery_mV": toInt(datas[16]), 
+        "boost": toInt(datas[18]), // 0 = off, 1 = on
+        "ad_raw": toInt(datas[19])
       };
       console.debug('data:', result);
       this.last = this.persist_data(result);
@@ -103,69 +117,54 @@ const rtl_process = {
       console.debug(`data: No parsing criteria met. mode: ${mode}, data size: ${datas.length}`);
     }
   },
-  persist_data: function (data) {
-    //connect to a heroku pgsql database using an env variable
-    process.env.NODE_TLS_REJECT_UNAUTHORIZED=0
-      console.log("Connecting to database by env URL ... XXX",);
-   //   console.debug("Connecting to database by env URL ... ",process.env.DATABASE_URL);
-    const client = this.client || new Client({
-      connectionString: process.env.DATABASE_URL,
-      ssl: true
-    });
-    try{
-      // pg insert with promises
-      return client.connect()
-      .then(() => {
-        console.log(`connected to database, parsing sensor ${data.model} (${data.sensorId})`);
-        //get sensor id from database for the sensor id in the data
-        return client.query(`SELECT * FROM sensors WHERE sensor_id = '${data.sensorId}' and sensor_name = '${data.model}'`);
-      })
-      .then((sensor_res) => {
-        if(sensor_res.rowCount == 0 ){
-          console.log(`No sensor found for sensor id ${data.sensorId}`);
-          console.log(`Inserting sensor ${data.model} (${data.sensorId})`);
-          return client.query(`INSERT INTO sensors (created_on, sensor_id, sensor_type, data_validity, sensor_name) VALUES (to_timestamp(${Date.now()} / 1000), '${data.sensorId}', 'weather', 1, '${data.model}') RETURNING *`);
-        }else{
-          console.log(`Found sensor ${data.model} (${data.sensorId}). pid: ${sensor_res.rows[0].pid}`);
-          return sensor_res;
-        }
-      })
-      .then((sensor_res) => {
-        return sensor_res.rows[0];
-      })
-      .then((sensor_details) => {
-        //console.debug("sensor details: ",sensor_details);
-        if (sensor_details.data_validity == 1) {
-          if (sensor_details.sensor_type == "weather") {
-            return client.query(`INSERT INTO reports (created_on, observed_at, seq, sensor_id, lowbattery, battery_ok, mic, startup, temperature_f, humidity, wind_kph, wind_dir_deg, rain_first_mm, rain_second_mm, rain_diff_mm) VALUES (to_timestamp(${Date.now()} / 1000), $1, $2, ${sensor_details.pid}, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING *`, [data.dtg, data.seq, data.lowbattery, data.battery_ok, data.mic, data.startup, data.temperatureF, data.humidity, data.wind_kph, data.wind_dir, data.rain1_mm, data.rain2_mm, data.rain_diff_mm]);
-          } else if (sensor_details.sensor_type == "moisture") {
-            return client.query(`INSERT INTO moisture_report (created_on, observed_at, sensor_id, battery_ok, moisture, battery_mv, boost, ad_raw) VALUES (to_timestamp(${Date.now()} / 1000), $1, ${sensor_details.pid}, $2, $3, $4, $5, $6) RETURNING *`, [data.dtg, data.battery_ok, data.moisture, data.battery_mV, data.boost, data.ad_raw]);
-          } else {
-            return Promise.reject(`sensor ${data.model} (${data.sensorId}) is invalid type (${data.type}), skipping insert`);
-          }
-        } else {
-          return Promise.reject(`sensor ${data.model} (${data.sensorId}) is marked invalid, skipping insert`);
-        }
-      }).then((res) => {
-        console.log('inserted data');
-        if (!this.client) client.end(); // Only close the client if it was not injected
-      }
-      ).catch(err => {
-        console.log(err);
-        if (!this.client) client.end(); // Only close the client if it was not injected
-      }
+  persist_data: async function (data) {
+    const db = this.client || pool;
+    try {
+      console.log(`connected to database, parsing sensor ${data.model} (${data.sensorId})`);
+      // get sensor record using parameterized query to prevent SQL injection
+      const sensor_res = await db.query(
+        'SELECT * FROM sensors WHERE sensor_id = $1 AND sensor_name = $2',
+        [String(data.sensorId), data.model]
       );
-    }
-    catch(err){
-      console.log(err);
-      console.error("Failed to insert into database with env URL ... ",process.env.DATABASE_URL);
-    }
-    
-    
-    //     let res = client.query('select * from reports where sensor_id = ${data.sensorId} and dtg = ${data.dtg};');
 
-    // let res = client.query('select * from reports;');  }
-}
+      let sensor_details;
+      if (sensor_res.rowCount == 0) {
+        console.log(`No sensor found for sensor id ${data.sensorId}`);
+        console.log(`Inserting sensor ${data.model} (${data.sensorId})`);
+        const insert_res = await db.query(
+          'INSERT INTO sensors (created_on, sensor_id, sensor_type, data_validity, sensor_name) VALUES (to_timestamp($1 / 1000), $2, $3, $4, $5) RETURNING *',
+          [Date.now(), String(data.sensorId), 'weather', 1, data.model]
+        );
+        sensor_details = insert_res.rows[0];
+      } else {
+        console.log(`Found sensor ${data.model} (${data.sensorId}). pid: ${sensor_res.rows[0].pid}`);
+        sensor_details = sensor_res.rows[0];
+      }
+
+      if (sensor_details.data_validity == 1) {
+        if (sensor_details.sensor_type == "weather") {
+          await db.query(
+            'INSERT INTO reports (created_on, observed_at, seq, sensor_id, lowbattery, battery_ok, mic, startup, temperature_f, humidity, wind_kph, wind_dir_deg, rain_first_mm, rain_second_mm, rain_diff_mm) VALUES (to_timestamp($1 / 1000), $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15) RETURNING *',
+            [Date.now(), data.dtg, data.seq, sensor_details.pid, data.lowbattery, data.battery_ok, data.mic, data.startup, data.temperatureF, data.humidity, data.wind_kph, data.wind_dir, data.rain1_mm, data.rain2_mm, data.rain_diff_mm]
+          );
+        } else if (sensor_details.sensor_type == "moisture") {
+          await db.query(
+            'INSERT INTO moisture_report (created_on, observed_at, sensor_id, battery_ok, moisture, battery_mv, boost, ad_raw) VALUES (to_timestamp($1 / 1000), $2, $3, $4, $5, $6, $7, $8) RETURNING *',
+            [Date.now(), data.dtg, sensor_details.pid, data.battery_ok, data.moisture, data.battery_mV, data.boost, data.ad_raw]
+          );
+        } else {
+          console.log(`sensor ${data.model} (${data.sensorId}) is invalid type (${sensor_details.sensor_type}), skipping insert`);
+          return;
+        }
+      } else {
+        console.log(`sensor ${data.model} (${data.sensorId}) is marked invalid, skipping insert`);
+        return;
+      }
+      console.log('inserted data');
+    } catch(err) {
+      console.error('Failed to persist data:', err);
+    }
+  }
 }
 
 export default rtl_process;

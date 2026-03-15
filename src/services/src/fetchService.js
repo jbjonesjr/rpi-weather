@@ -1,17 +1,19 @@
 import pg from 'pg';
 
-const { Client } = pg;
+const { Pool } = pg;
 
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0
-console.log("Connecting to database...", process.env.DATABASE_URL);
+if (!process.env.DATABASE_URL) {
+  console.error('DATABASE_URL environment variable is required');
+  process.exit(1);
+}
 
-const client = new Client({
+const SENSOR_ID = process.env.SENSOR_ID || '16';
+
+const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
-    ssl: true,
+    ssl: { rejectUnauthorized: false },
     query_timeout: 25000
-
 });
-client.connect();
 
 const fetch = {
     fetch_current_conditions: () => {
@@ -33,15 +35,15 @@ const fetch = {
           FROM reports AS reports_temp 
           WHERE reports.sensor_id = reports_temp.sensor_id 
           AND reports.observed_at < reports_temp.observed_at) 
-        and sensor_id = '16'
+        and sensor_id = $1
         `;
 
         // perform pg query and return the results in a promise
         console.log(`fetching current conditions`);
 
-        return client.query(conditions_query)
+        return pool.query(conditions_query, [SENSOR_ID])
             .then(result => {
-                if (result.length == 0) {
+                if (result.rows.length == 0) {
                     return null;
                 }
 
@@ -49,10 +51,10 @@ const fetch = {
 
                 return {
                     obs: result.rows[0].time,
-                    temperate_f: result.rows[0].temp_f,
-                    humidty_perc: result.rows[0].humidity,
+                    temperature_f: result.rows[0].temp_f,
+                    humidity_perc: result.rows[0].humidity,
                     wind_dir: result.rows[0].wind_dir,
-                    wind_speed_mph: result.rows[0].wind_kph,
+                    wind_kph: result.rows[0].wind,
                     rainfall_rate_in: result.rows[0].rain_rate
                 };
             }).catch(err => {
@@ -69,7 +71,7 @@ const fetch = {
             console.log(`fetching today's alamanac`);
 
             // Query the database for the current conditions and return them
-            return client.query(almanac_today_query)
+            return pool.query(almanac_today_query)
                 .then(result => {
                     console.log(`fetched daily almanac`);
 
@@ -102,7 +104,7 @@ const fetch = {
             console.log(`fetching today's alamanac`);
 
             // Query the database for the current conditions and return them
-            return client.query(almanac_yesterday_query)
+            return pool.query(almanac_yesterday_query)
                 .then(result => {
                     console.log(`fetched daily almanac`);
 
@@ -140,7 +142,7 @@ const fetch = {
             console.log(`fetching today's alamanac`);
 
             // Query the database for the current conditions and return them
-            return client.query(almanac_generic_query, [year, month, date])
+            return pool.query(almanac_generic_query, [year, month, date])
                 .then(result => {
                     console.log(`fetched daily almanac`);
 
@@ -170,7 +172,7 @@ const fetch = {
                 SELECT observed_at, temperature_f 
                 FROM reports 
                 WHERE date_trunc('day', observed_at) = make_date($1,$2,$3)
-                AND sensor_id = 16 
+                AND sensor_id = $4 
             ) AS "raw_obs"
             GROUP BY date_trunc('hour', observed_at at time zone 'America/New_York')
         `;
@@ -179,7 +181,7 @@ const fetch = {
             console.log(`fetching hourly extreme temperatures for ${month}/${date}/${year}`);
 
             // Query the database for the current conditions and return them
-            return client.query(temperature_extremes_query, [year, month, date])
+            return pool.query(temperature_extremes_query, [year, month, date, SENSOR_ID])
                 .then(result => {
                     console.log(`fetched extreme temps`, result);
                     return result.rows;

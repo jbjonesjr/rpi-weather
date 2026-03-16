@@ -4,14 +4,27 @@ const { Pool } = pg;
 import dotenv from 'dotenv';
 dotenv.config();
 
-if (!process.env.DATABASE_URL) {
-  console.error('DATABASE_URL environment variable is required');
-  process.exit(1);
-}
+let poolInstance = null;
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false }
+const getPool = () => {
+  if (!poolInstance) {
+    if (!process.env.DATABASE_URL) {
+      throw new Error('DATABASE_URL environment variable is required');
+    }
+    poolInstance = new Pool({
+      connectionString: process.env.DATABASE_URL,
+      ssl: { rejectUnauthorized: false }
+    });
+  }
+  return poolInstance;
+};
+
+const pool = new Proxy({}, {
+  get(_target, prop, receiver) {
+    const actualPool = getPool();
+    const value = Reflect.get(actualPool, prop, receiver);
+    return typeof value === 'function' ? value.bind(actualPool) : value;
+  }
 });
 
 const toFloat = (s) => { const v = parseFloat(s); return isNaN(v) ? null : v; };

@@ -3,8 +3,7 @@ import pg from 'pg';
 const { Pool } = pg;
 
 if (!process.env.DATABASE_URL) {
-  console.error('DATABASE_URL environment variable is required');
-  process.exit(1);
+  throw new Error('DATABASE_URL environment variable is required');
 }
 
 const SENSOR_ID = process.env.SENSOR_ID || '16';

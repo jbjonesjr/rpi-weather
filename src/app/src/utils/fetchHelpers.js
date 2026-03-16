@@ -3,7 +3,8 @@
 // app is served by the Express server (production / Heroku).
 // Set REACT_APP_API_URL only when running the React dev server separately from
 // the Express API, e.g. REACT_APP_API_URL=http://localhost:5000
-const API_BASE = process.env.REACT_APP_API_URL || '';
+const RAW_API_BASE = process.env.REACT_APP_API_URL || '';
+const API_BASE = RAW_API_BASE.replace(/\/+$/, '');
 const today = new Date();
 const conditions_url = `${API_BASE}/api/weather/current`;
 const almanac_url = `${API_BASE}/api/weather/almanac/today`;

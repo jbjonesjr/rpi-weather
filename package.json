@@ -14,7 +14,7 @@
     "start": "npm run start:prod",
     "start:prod": "(cd ./src/server && node index.js)",
     "start:dev": "npm run start:client & npm run start:server",
-    "start:client": "(cd ./src/app && npm start)",
+    "start:client": "(cd ./src/app && REACT_APP_API_URL=http://localhost:5000 npm start)",
     "start:server:local": "(cd ./src/server && npm run startlocal)",
     "test": "node ./src/rtl-publish/tests/tests.js"
   },

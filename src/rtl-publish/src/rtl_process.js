@@ -134,6 +134,11 @@ const rtl_process = {
     const db = this.client || pool;
     try {
       console.log(`connected to database, parsing sensor ${data.model} (${data.sensorId})`);
+      // derive sensor type from model; default to 'weather'
+      let sensor_type = 'weather';
+      if (data.model === 'Fineoffset-WH51') {
+        sensor_type = 'moisture';
+      }
       // get sensor record using parameterized query to prevent SQL injection
       const sensor_res = await db.query(
         'SELECT * FROM sensors WHERE sensor_id = $1 AND sensor_name = $2',
@@ -146,7 +151,7 @@ const rtl_process = {
         console.log(`Inserting sensor ${data.model} (${data.sensorId})`);
         const insert_res = await db.query(
           'INSERT INTO sensors (created_on, sensor_id, sensor_type, data_validity, sensor_name) VALUES (to_timestamp($1 / 1000), $2, $3, $4, $5) RETURNING *',
-          [Date.now(), String(data.sensorId), 'weather', 1, data.model]
+          [Date.now(), String(data.sensorId), sensor_type, 1, data.model]
         );
         sensor_details = insert_res.rows[0];
       } else {

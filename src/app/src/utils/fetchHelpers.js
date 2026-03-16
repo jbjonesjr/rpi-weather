@@ -1,8 +1,14 @@
 
+// API_BASE defaults to '' so that all requests use relative URLs when the React
+// app is served by the Express server (production / Heroku).
+// Set REACT_APP_API_URL only when running the React dev server separately from
+// the Express API, e.g. REACT_APP_API_URL=http://localhost:5000
+const RAW_API_BASE = process.env.REACT_APP_API_URL || '';
+const API_BASE = RAW_API_BASE.replace(/\/+$/, '');
 const today = new Date();
-const conditions_url = `https://jbjonesjr-weather-server.herokuapp.com/api/weather/current`;
-const almanac_url = `https://jbjonesjr-weather-server.herokuapp.com/api/weather/almanac/today`;
-const t_e_url = `https://jbjonesjr-weather-server.herokuapp.com/api/weather/almanac/extremes/${today.getFullYear()}/${today.getMonth() + 1}/${today.getDate()}`;
+const conditions_url = `${API_BASE}/api/weather/current`;
+const almanac_url = `${API_BASE}/api/weather/almanac/today`;
+const t_e_url = `${API_BASE}/api/weather/almanac/extremes/${today.getFullYear()}/${today.getMonth() + 1}/${today.getDate()}`;
 
 
 export const getWeather = async () => {
@@ -18,7 +24,7 @@ export const getWeather = async () => {
   });
 
   console.debug("api results",conditions_data, almanac_data);
-  return [{ observation_time: conditions_data.obs, currentTemp: conditions_data.temperate_f, weatherMain: "unk", "tempMax": almanac_data.max_temp, "tempMin": almanac_data.min_temp, "totalRainfall": almanac_data.total_rainfall }, "Waynewood"];
+  return [{ observation_time: conditions_data.obs, currentTemp: conditions_data.temperature_f, weatherMain: "unk", "tempMax": almanac_data.max_temp, "tempMin": almanac_data.min_temp, "totalRainfall": almanac_data.total_rainfall }, "Waynewood"];
 }
 
 export const getTemperatureExtremes = async () => {

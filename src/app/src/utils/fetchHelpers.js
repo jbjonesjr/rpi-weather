@@ -1,4 +1,8 @@
 
+// API_BASE defaults to '' so that all requests use relative URLs when the React
+// app is served by the Express server (production / Heroku).
+// Set REACT_APP_API_URL only when running the React dev server separately from
+// the Express API, e.g. REACT_APP_API_URL=http://localhost:5000
 const API_BASE = process.env.REACT_APP_API_URL || '';
 const today = new Date();
 const conditions_url = `${API_BASE}/api/weather/current`;

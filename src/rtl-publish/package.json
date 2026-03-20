@@ -19,7 +19,7 @@
   "homepage": "https://github.com/jbjonesjr/rpi-weather#readme",
   "type": "module",
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=20.5.0"
   },
   "dependencies": {
     "@rauschma/stringio": "^1.4.0",

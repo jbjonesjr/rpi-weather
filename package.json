@@ -4,7 +4,7 @@
   "description": "working on turning a raspberry pi into an always on, internet connected weather station",
   "main": "index.js",
   "engines": {
-    "node": "18.x"
+    "node": ">=20.5.0"
   },
   "scripts": {
     "install": "npm run install:services && npm run install:client && npm run install:server",
